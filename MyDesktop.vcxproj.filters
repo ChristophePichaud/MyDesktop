@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shell">
+      <UniqueIdentifier>{d5096852-0202-4cd1-9e02-8b8c2a6793b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{38f303c7-4404-4a18-83eb-d2b6c4e100f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyDesktop.h">
@@ -45,6 +51,18 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyShell.h">
+      <Filter>Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationViewBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassTreeWnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyDesktop.cpp">
@@ -66,6 +84,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyShell.cpp">
+      <Filter>Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationViewBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassTreeWnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

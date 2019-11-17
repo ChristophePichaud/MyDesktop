@@ -117,6 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -187,23 +188,31 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationViewBar.h" />
     <ClInclude Include="calendarbar.h" />
+    <ClInclude Include="ClassTreeWnd.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MyDesktop.h" />
     <ClInclude Include="MyDesktopDoc.h" />
     <ClInclude Include="MyDesktopView.h" />
+    <ClInclude Include="MyShell.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApplicationViewBar.cpp" />
     <ClCompile Include="calendarbar.cpp" />
+    <ClCompile Include="ClassTreeWnd.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MyDesktop.cpp" />
     <ClCompile Include="MyDesktopDoc.cpp" />
     <ClCompile Include="MyDesktopView.cpp" />
+    <ClCompile Include="MyShell.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

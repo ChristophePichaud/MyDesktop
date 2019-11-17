@@ -46,6 +46,10 @@ CMainFrame::CMainFrame() noexcept
 {
 	// TODO: add member initialization code here
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_BLUE);
+
+    // Set Manager pointer
+    CMyDesktopApp* pApp = (CMyDesktopApp*)AfxGetApp();
+    SetManager(pApp->GetManager());
 }
 
 CMainFrame::~CMainFrame()
@@ -111,7 +115,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndOutput);
+    DockPane(&m_wndOutput);
+
+    m_wndApplicationView.EnableDocking(CBRS_ALIGN_ANY);
+    DockPane(&m_wndApplicationView);
 
 	// set the visual manager and style based on persisted value
 	OnApplicationLook(theApp.m_nAppLook);
@@ -145,7 +152,16 @@ BOOL CMainFrame::CreateDockingWindows()
 		return FALSE; // failed to create
 	}
 
+    if (!m_wndApplicationView.Create(_T("Application Explorer"), this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_FILE, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+    {
+        TRACE0("Failed to create Solution Explorer bar\n");
+        return FALSE;      // fail to create
+    }
+
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
+
+    m_wndApplicationView.SetManager(GetManager());
+
 	return TRUE;
 }
 
@@ -154,6 +170,8 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
 
+    HICON hFileViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+    m_wndApplicationView.SetIcon(hFileViewIcon, FALSE);
 }
 
 BOOL CMainFrame::CreateOutlookBar(CMFCOutlookBar& bar, UINT uiID, CMFCShellTreeCtrl& tree, CCalendarBar& calendar, int nInitialWidth)
@@ -391,3 +409,9 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	CFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
 }
+
+void CMainFrame::SetManager(std::shared_ptr<CFileManager> pManager)
+{
+    m_pManager = pManager;
+}
+

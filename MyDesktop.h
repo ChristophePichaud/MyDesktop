@@ -18,6 +18,7 @@
 #endif
 
 #include "resource.h"       // main symbols
+#include "FileManager.h"
 
 
 // CMyDesktopApp:
@@ -30,7 +31,14 @@ public:
 	CMyDesktopApp() noexcept;
 
 
-// Overrides
+public:
+    std::shared_ptr<CFileManager> m_pManager;
+    std::shared_ptr<CFileManager> GetManager()
+    {
+        return m_pManager;
+    }
+    
+ // Overrides
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();

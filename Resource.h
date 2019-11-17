@@ -59,6 +59,15 @@
 #define IDS_SHORTCUTS				252
 #define IDS_FOLDERS					253
 #define IDS_OUTLOOKBAR				258
+#define IDB_FILE_VIEW               260
+#define IDB_FILE_VIEW24             261
+#define IDB_SOLUTION_EXPLORER_24    262
+#define IDR_SOLUTION_EXPLORER       263
+#define ID_PROPERTIES               264
+#define ID_VIEW_FILE                265
+#define IDI_FILE_VIEW               266
+#define IDI_FILE_VIEW_HC            267
+
 #define IDS_BUILD_TAB				300
 #define IDS_DEBUG_TAB				301
 #define IDS_FIND_TAB				302

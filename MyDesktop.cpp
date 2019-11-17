@@ -83,6 +83,8 @@ BOOL CMyDesktopApp::InitInstance()
 
 	CWinAppEx::InitInstance();
 
+    // The File Manager
+    m_pManager = std::make_shared<CFileManager>();
 
 	// Initialize OLE libraries
 	if (!AfxOleInit())

@@ -15,6 +15,7 @@
 #pragma once
 #include "OutputWnd.h"
 #include "CalendarBar.h"
+#include "ApplicationViewBar.h"
 #include "Resource.h"
 
 class COutlookBar : public CMFCOutlookBar
@@ -47,6 +48,18 @@ public:
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
+
+public:
+    std::shared_ptr<CFileManager> m_pManager;
+    std::shared_ptr<CFileManager> GetManager() const
+    {
+        return m_pManager;
+    }
+    void SetManager(std::shared_ptr<CFileManager> pManager);
+    //void CloseAllDocuments();
+
+public:
+    CApplicationViewBar m_wndApplicationView;
 
 protected:  // control bar embedded members
 	CMFCRibbonBar     m_wndRibbonBar;
