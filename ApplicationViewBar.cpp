@@ -86,15 +86,15 @@ void CApplicationViewBar::FillFileView()
 {
     m_wndFileView.DeleteAllItems();
 
-    _hRootProject = m_wndFileView.InsertItem(_T("Project"), 0, 0);
+    _hRootProject = m_wndFileView.InsertItem(_T("Desktop"), 0, 0);
     m_wndFileView.SetItemState(_hRootProject, TVIS_BOLD, TVIS_BOLD);
 
-    _hReferences = m_wndFileView.InsertItem(_T("References"), 0, 0, _hRootProject);
+    _hAppz = m_wndFileView.InsertItem(_T("Applications"), 0, 0, _hRootProject);
 
-    _hSrc = m_wndFileView.InsertItem(_T("Source Files"), 0, 0, _hRootProject);
+    _hSystem = m_wndFileView.InsertItem(_T("System"), 0, 0, _hRootProject);
 
     m_wndFileView.Expand(_hRootProject, TVE_EXPAND);
-    m_wndFileView.Expand(_hSrc, TVE_EXPAND);
+    m_wndFileView.Expand(_hAppz, TVE_EXPAND);
 }
 
 void CApplicationViewBar::OnContextMenu(CWnd* pWnd, CPoint point)

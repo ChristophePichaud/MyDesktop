@@ -32,8 +32,8 @@ public:
 
 public:
     HTREEITEM _hRootProject;
-    HTREEITEM _hSrc;
-    HTREEITEM _hReferences;
+    HTREEITEM _hAppz;
+    HTREEITEM _hSystem;
 
 public:
     CClassTreeWnd m_wndFileView;

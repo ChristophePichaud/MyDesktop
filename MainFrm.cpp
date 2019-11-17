@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMainFrame::OnFilePrintPreview)
 	ON_UPDATE_COMMAND_UI(ID_FILE_PRINT_PREVIEW, &CMainFrame::OnUpdateFilePrintPreview)
 	ON_WM_SETTINGCHANGE()
+    ON_COMMAND(ID_GET_APPZ, &CMainFrame::OnGetAppz)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -90,11 +91,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnableDocking(CBRS_ALIGN_TOP | CBRS_ALIGN_BOTTOM | CBRS_ALIGN_RIGHT);
 
 	// Create and setup "Outlook" navigation bar:
-	if (!CreateOutlookBar(m_wndNavigationBar, ID_VIEW_NAVIGATION, m_wndTree, m_wndCalendar, 250))
-	{
-		TRACE0("Failed to create navigation pane\n");
-		return -1;      // fail to create
-	}
+	//if (!CreateOutlookBar(m_wndNavigationBar, ID_VIEW_NAVIGATION, m_wndTree, m_wndCalendar, 250))
+	//{
+	//	TRACE0("Failed to create navigation pane\n");
+	//	return -1;      // fail to create
+	//}
 
 	// Create a caption bar:
 	if (!CreateCaptionBar())
@@ -415,3 +416,12 @@ void CMainFrame::SetManager(std::shared_ptr<CFileManager> pManager)
     m_pManager = pManager;
 }
 
+
+void CMainFrame::OnGetAppz()
+{
+    // TODO: Add your command handler code here
+    // Do the job of appz retrieval 
+    CString strPath = _T("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs");
+    CFileManager::SearchDrive(_T("*.*"), strPath, true, false, m_wndApplicationView._hAppz);
+    m_wndApplicationView.m_wndFileView.Expand(m_wndApplicationView._hAppz, TVE_EXPAND);
+}
