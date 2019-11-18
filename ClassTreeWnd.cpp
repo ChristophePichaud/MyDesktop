@@ -54,12 +54,12 @@ void CClassTreeWnd::OnNMDblclk(NMHDR* pNMHDR, LRESULT* pResult)
     if (hItem == NULL)
         return;
 
-    //CCodeFile* pCode = (CCodeFile*)GetItemData(hItem);
-    //if (pCode == NULL)
-    //    return;
+    ApplicationLink* pLink = (ApplicationLink*)GetItemData(hItem);
+    if (pLink == NULL)
+        return;
 
     CWnd* pWnd = AfxGetMainWnd();
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
 
-    //pMainFrame->GetManager()->LoadFile(pCode);
+    pMainFrame->GetManager()->ProcessLink(pLink);
 }

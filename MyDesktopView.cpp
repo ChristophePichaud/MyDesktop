@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CMyDesktopView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMyDesktopView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+    ON_COMMAND(ID_GET_ICON, &CMyDesktopView::OnGetIcon)
 END_MESSAGE_MAP()
 
 // CMyDesktopView construction/destruction
@@ -136,3 +137,10 @@ CMyDesktopDoc* CMyDesktopView::GetDocument() const // non-debug version is inlin
 
 
 // CMyDesktopView message handlers
+
+
+void CMyDesktopView::OnGetIcon()
+{
+    // TODO: Add your command handler code here
+    AfxMessageBox(_T("OnGetIcon"));
+}

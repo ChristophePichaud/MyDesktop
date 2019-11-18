@@ -15,8 +15,8 @@
 #include "pch.h"
 #include "framework.h"
 #include "MyDesktop.h"
-
 #include "MainFrm.h"
+#include "FileManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -425,3 +425,5 @@ void CMainFrame::OnGetAppz()
     CFileManager::SearchDrive(_T("*.*"), strPath, true, false, m_wndApplicationView._hAppz);
     m_wndApplicationView.m_wndFileView.Expand(m_wndApplicationView._hAppz, TVE_EXPAND);
 }
+
+

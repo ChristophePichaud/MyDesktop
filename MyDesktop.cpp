@@ -97,7 +97,9 @@ BOOL CMyDesktopApp::InitInstance()
 
 	EnableTaskbarInteraction(FALSE);
 
-	// AfxInitRichEdit2() is required to use RichEdit control
+    ::CoInitialize(NULL);
+    
+    // AfxInitRichEdit2() is required to use RichEdit control
 	// AfxInitRichEdit2();
 
 	// Standard initialization

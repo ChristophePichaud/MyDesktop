@@ -56,9 +56,9 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
                     al->_name = T2W((LPTSTR)(LPCTSTR)strTheNameOfTheFile); //strFile;
                     al->_filepathname = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
 
-                    //pMainFrame->GetManager()->m_pSolution->AddFileToProject(cf);
+                    pMainFrame->GetManager()->m_Links.push_back(al);
                     //this->UpdateSolution(cf);
-                    HTREEITEM hItem = pMainFrame->m_wndApplicationView.m_wndFileView.InsertItem(strTheNameOfTheFile /*cf->_name.c_str()*/, 1, 1, parent);
+                    HTREEITEM hItem = pMainFrame->m_wndApplicationView.m_wndFileView.InsertItem(strTheNameOfTheFile /*cf->_name.c_str()*/, 2, 2, parent);
                     pMainFrame->m_wndApplicationView.m_wndFileView.SetItemData(hItem, (DWORD_PTR)(al.get()));
 
                     if (bStopWhenFound)
@@ -71,4 +71,86 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
     }
 
     return strFoundFilePath;
+}
+
+HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
+{
+    HRESULT hres;
+    WCHAR szGotPath[MAX_PATH];
+    WCHAR szDescription[MAX_PATH];
+    WIN32_FIND_DATA wfd;
+
+    *lpszPath = 0; // Assume failure 
+
+    // Get a pointer to the IShellLink interface. It is assumed that CoInitialize
+    // has already been called. 
+    CComPtr<IShellLink> shellLink;
+    hres = shellLink.CoCreateInstance(CLSID_ShellLink);
+    if (FAILED(hres))
+    {
+        wcout << "CoCreateInstance failed" << endl;
+        return hres;
+    }
+
+    CComQIPtr<IPersistFile> persistFile(shellLink);
+    WCHAR wsz[MAX_PATH];
+
+    hres = persistFile->Load(lpszLinkFile, STGM_READ);
+    if (FAILED(hres))
+    {
+        wcout << "Load failed" << endl;
+        return hres;
+    }
+
+    hres = shellLink->Resolve(hwnd, 0);
+    if (FAILED(hres))
+    {
+        wcout << "Resolve failed" << endl;
+        return hres;
+    }
+
+    // Get the path to the link target. 
+    hres = shellLink->GetPath(szGotPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_SHORTPATH);
+    if (FAILED(hres))
+    {
+        wcout << "GetPath failed" << endl;
+        return hres;
+    }
+
+    // Get the description of the target. 
+    hres = shellLink->GetDescription(szDescription, MAX_PATH);
+    if (FAILED(hres))
+    {
+        wcout << "GetDescription failed" << endl;
+        return hres;
+    }
+
+    //hres = StringCbCopy(lpszPath, iPathBufferSize, szGotPath);
+    _tcscpy_s(lpszPath, iPathBufferSize, szGotPath);
+
+    WCHAR szIconPath[255];
+    int iIconPathBufferSize = 255;
+    int icon = 0;
+    hres = shellLink->GetIconLocation(szIconPath, iIconPathBufferSize, &icon);
+    wcout << "Icon Path: " << szIconPath << " Index: " << icon << endl;
+
+    return hres;
+}
+
+void CFileManager::ProcessLink(ApplicationLink* pLink)
+{
+    //HRESULT CFileManager::ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
+
+    WCHAR lpszPath[255];
+    int iPathBufferSize = 255;
+    const wchar_t* fn = pLink->_filepathname.c_str();
+
+    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize);
+    if (FAILED(hr))
+    {
+        wcout << "ResolveIt failed" << endl;
+        return;
+    }
+
+    AfxMessageBox(lpszPath);
 }
