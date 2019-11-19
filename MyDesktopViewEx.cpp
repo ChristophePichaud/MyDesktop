@@ -15,6 +15,7 @@ CMyDesktopViewEx::CMyDesktopViewEx()
 {
     m_strApplicationName = _T("");
     m_strApplicationPathFileName = _T("");
+    m_hIcon = NULL; // AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 CMyDesktopViewEx::~CMyDesktopViewEx()
@@ -29,6 +30,7 @@ void CMyDesktopViewEx::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CMyDesktopViewEx, CFormView)
+    ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -57,4 +59,14 @@ void CMyDesktopViewEx::OnInitialUpdate()
     CFormView::OnInitialUpdate();
 
     // TODO: Add your specialized code here and/or call the base class
+}
+
+
+void CMyDesktopViewEx::OnPaint()
+{
+    CPaintDC dc(this); // device context for painting
+                       // TODO: Add your message handler code here
+                       // Do not call CFormView::OnPaint() for painting messages
+
+    dc.DrawIcon(100, 100, m_hIcon);
 }

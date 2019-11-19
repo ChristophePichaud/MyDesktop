@@ -33,7 +33,9 @@ public:
 public:
     CString m_strApplicationName;
     CString m_strApplicationPathFileName;
+    HICON m_hIcon;
 
+    afx_msg void OnPaint();
 };
 
 

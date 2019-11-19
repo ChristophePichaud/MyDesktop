@@ -74,7 +74,7 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
     return strFoundFilePath;
 }
 
-HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
+HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize, int & iconIndex)
 {
     HRESULT hres;
     WCHAR szGotPath[MAX_PATH];
@@ -94,8 +94,6 @@ HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath,
     }
 
     CComQIPtr<IPersistFile> persistFile(shellLink);
-    WCHAR wsz[MAX_PATH];
-
     hres = persistFile->Load(lpszLinkFile, STGM_READ);
     if (FAILED(hres))
     {
@@ -126,7 +124,6 @@ HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath,
         return hres;
     }
 
-    //hres = StringCbCopy(lpszPath, iPathBufferSize, szGotPath);
     _tcscpy_s(lpszPath, iPathBufferSize, szGotPath);
 
     WCHAR szIconPath[255];
@@ -145,19 +142,43 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     WCHAR lpszPath[255];
     int iPathBufferSize = 255;
     const wchar_t* fn = pLink->_linkFilePathName.c_str();
+    int iconIndex = 0;
 
-    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize);
+    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize, iconIndex);
     if (FAILED(hr))
     {
         wcout << "ResolveIt failed" << endl;
         return;
     }
 
-    AfxMessageBox(lpszPath);
-    /*
+    pLink->_appFilePathName = lpszPath;
+    pLink->_iconIndex = iconIndex;
+    //AfxMessageBox(lpszPath);
+
     CWnd* pWnd = AfxGetMainWnd();
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
     CView* pView = pMainFrame->GetActiveView();
-    CMyDsktopViewEx* pRealView = (CMyDesktopViewEx*)pView;
-    */
+    CMyDesktopViewEx* pMyView = (CMyDesktopViewEx*)pView;
+    pMyView->m_strApplicationName = pLink->_name.c_str();
+    pMyView->m_strApplicationPathFileName = pLink->_appFilePathName.c_str();
+    ExtractIcon(pLink);
+    pMyView->m_hIcon = pLink->_hIcon;
+    pMyView->UpdateData(FALSE);
+    pMyView->Invalidate();
 }
+
+void CFileManager::ExtractIcon(ApplicationLink* pLink)
+{
+    HICON phIcon;
+    UINT pIconId = 0;
+    int cx = 0;
+    int cy = 0;
+    UINT res = ::PrivateExtractIcons(pLink->_appFilePathName.c_str(), pLink->_iconIndex, cx, cy, &phIcon, &pIconId, 1, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
+    if (res == 0xFFFFFFF)
+    {
+        AfxMessageBox(_T("PrivateExtractIconsFAILED"));
+    }
+
+    pLink->_hIcon = phIcon;
+}
+

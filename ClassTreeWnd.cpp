@@ -21,7 +21,9 @@ CClassTreeWnd::~CClassTreeWnd()
 }
 
 BEGIN_MESSAGE_MAP(CClassTreeWnd, CTreeCtrl)
-    ON_NOTIFY_REFLECT(NM_DBLCLK, &CClassTreeWnd::OnNMDblclk)
+    //ON_NOTIFY_REFLECT(NM_DBLCLK, &CClassTreeWnd::OnNMDblclk)
+    //ON_NOTIFY_REFLECT(NM_CLICK, &CClassTreeWnd::OnNMClick)
+    ON_NOTIFY_REFLECT(TVN_ITEMCHANGED, &CClassTreeWnd::OnTvnItemChanged)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -48,7 +50,25 @@ void CClassTreeWnd::OnNMDblclk(NMHDR* pNMHDR, LRESULT* pResult)
     // TODO: Add your control notification handler code here
     *pResult = 0;
 
-    //AfxMessageBox(_T("NM_DBLCLK"));
+    HTREEITEM hItem = GetSelectedItem();
+    if (hItem == NULL)
+        return;
+
+    ApplicationLink* pLink = (ApplicationLink*)GetItemData(hItem);
+    if (pLink == NULL)
+        return;
+
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+    pMainFrame->GetManager()->ProcessLink(pLink);
+}
+
+
+void CClassTreeWnd::OnNMClick(NMHDR* pNMHDR, LRESULT* pResult)
+{
+    // TODO: Add your control notification handler code here
+    *pResult = 0;
+    //AfxMessageBox(_T("NM_CLICK"));
 
     HTREEITEM hItem = GetSelectedItem();
     if (hItem == NULL)
@@ -60,6 +80,25 @@ void CClassTreeWnd::OnNMDblclk(NMHDR* pNMHDR, LRESULT* pResult)
 
     CWnd* pWnd = AfxGetMainWnd();
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+    pMainFrame->GetManager()->ProcessLink(pLink);
+}
 
+
+void CClassTreeWnd::OnTvnItemChanged(NMHDR* pNMHDR, LRESULT* pResult)
+{
+    NMTVITEMCHANGE* pNMTVItemChange = reinterpret_cast<NMTVITEMCHANGE*>(pNMHDR);
+    // TODO: Add your control notification handler code here
+    *pResult = 0;
+
+    HTREEITEM hItem = GetSelectedItem();
+    if (hItem == NULL)
+        return;
+
+    ApplicationLink* pLink = (ApplicationLink*)GetItemData(hItem);
+    if (pLink == NULL)
+        return;
+
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
     pMainFrame->GetManager()->ProcessLink(pLink);
 }

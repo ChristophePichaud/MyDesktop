@@ -10,6 +10,8 @@ public:
     wstring _name;
     wstring _linkFilePathName;
     wstring _appFilePathName;
+    int _iconIndex;
+    HICON _hIcon;
 };
 
 class ProgramManager
