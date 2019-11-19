@@ -89,6 +89,8 @@ void CApplicationViewBar::FillFileView()
     _hRootProject = m_wndFileView.InsertItem(_T("Desktop"), 0, 0);
     m_wndFileView.SetItemState(_hRootProject, TVIS_BOLD, TVIS_BOLD);
 
+    _hStartMenu = m_wndFileView.InsertItem(_T("Start Menu"), 0, 0, _hRootProject);
+
     _hAppz = m_wndFileView.InsertItem(_T("Applications"), 0, 0, _hRootProject);
 
     _hSystem = m_wndFileView.InsertItem(_T("System"), 0, 0, _hRootProject);

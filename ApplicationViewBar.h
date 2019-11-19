@@ -32,6 +32,7 @@ public:
 
 public:
     HTREEITEM _hRootProject;
+    HTREEITEM _hStartMenu;
     HTREEITEM _hAppz;
     HTREEITEM _hSystem;
 

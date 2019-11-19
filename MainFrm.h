@@ -57,6 +57,8 @@ public:
     }
     void SetManager(std::shared_ptr<CFileManager> pManager);
     //void CloseAllDocuments();
+    void FillStartMenu();
+    bool ReplaceView(CRuntimeClass* pViewClass);
 
 public:
     CApplicationViewBar m_wndApplicationView;
@@ -97,7 +99,9 @@ protected:
 	CMFCOutlookBarTabCtrl* m_pCurrOutlookWnd;
 	CMFCOutlookBarPane*    m_pCurrOutlookPage;
 public:
-    afx_msg void OnGetAppz();
+//    afx_msg void OnGetAppz();
+    afx_msg void OnViewStartmenu();
+    afx_msg void OnAppzDetails();
 };
 
 

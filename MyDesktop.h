@@ -30,14 +30,14 @@ class CMyDesktopApp : public CWinAppEx
 public:
 	CMyDesktopApp() noexcept;
 
-
 public:
     std::shared_ptr<CFileManager> m_pManager;
     std::shared_ptr<CFileManager> GetManager()
     {
         return m_pManager;
     }
-    
+    bool m_bApplicationViewLoading = false;
+
  // Overrides
 public:
 	virtual BOOL InitInstance();

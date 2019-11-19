@@ -22,6 +22,7 @@
 #include "MyDesktopDoc.h"
 #include "MyDesktopView.h"
 #include "MyDesktopViewEx.h"
+#include "StartMenuView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -138,6 +139,18 @@ BOOL CMyDesktopApp::InitInstance()
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
 
+    /*
+    CSingleDocTemplate* pDocTemplate2;
+    pDocTemplate2 = new CSingleDocTemplate(
+        IDR_MAINFRAME,
+        RUNTIME_CLASS(CMyDesktopDoc),
+        RUNTIME_CLASS(CMainFrame),       // main SDI frame window
+        RUNTIME_CLASS(CStartMenuView));
+    //RUNTIME_CLASS(CMyDesktopView));
+    if (!pDocTemplate2)
+        return FALSE;
+    AddDocTemplate(pDocTemplate2);
+    */
 
 	// Parse command line for standard shell commands, DDE, file open
 	CCommandLineInfo cmdInfo;

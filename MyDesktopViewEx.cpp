@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "MyDesktop.h"
 #include "MyDesktopViewEx.h"
-
+#include "MainFrm.h"
 
 // CMyDesktopViewEx
 
@@ -59,6 +59,15 @@ void CMyDesktopViewEx::OnInitialUpdate()
     CFormView::OnInitialUpdate();
 
     // TODO: Add your specialized code here and/or call the base class
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+    pMainFrame->GetManager()->ClearTree();
+
+    CString strPath = _T("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs");
+    CFileManager::SearchDrive(_T("*.*"), strPath, true, false, pMainFrame->m_wndApplicationView._hAppz);
+    pMainFrame->m_wndApplicationView.m_wndFileView.Expand(pMainFrame->m_wndApplicationView._hAppz, TVE_EXPAND);
+
+    pMainFrame->FillStartMenu();
 }
 
 

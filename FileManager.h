@@ -14,6 +14,7 @@ public:
 public:
     void ProcessLink(ApplicationLink* pLink);
     void ExtractIcon(ApplicationLink* pLink);
+    void ClearTree();
 
 public:
     std::vector<std::shared_ptr<ApplicationLink>> m_Links;

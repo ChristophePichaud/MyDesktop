@@ -158,6 +158,9 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     CWnd* pWnd = AfxGetMainWnd();
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
     CView* pView = pMainFrame->GetActiveView();
+    if (pView->IsKindOf(RUNTIME_CLASS(CMyDesktopViewEx)) == FALSE)
+        return;
+
     CMyDesktopViewEx* pMyView = (CMyDesktopViewEx*)pView;
     pMyView->m_strApplicationName = pLink->_name.c_str();
     pMyView->m_strApplicationPathFileName = pLink->_appFilePathName.c_str();
@@ -182,3 +185,13 @@ void CFileManager::ExtractIcon(ApplicationLink* pLink)
     pLink->_hIcon = phIcon;
 }
 
+void CFileManager::ClearTree()
+{
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+
+    // TreeView
+    pMainFrame->m_wndApplicationView.FillFileView();
+    // Solution items
+    m_Links.clear();
+}

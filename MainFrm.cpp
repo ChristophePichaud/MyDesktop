@@ -18,6 +18,7 @@
 #include "MainFrm.h"
 #include "FileManager.h"
 #include "MyDesktopViewEx.h"
+#include "StartMenuView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,7 +40,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMainFrame::OnFilePrintPreview)
 	ON_UPDATE_COMMAND_UI(ID_FILE_PRINT_PREVIEW, &CMainFrame::OnUpdateFilePrintPreview)
 	ON_WM_SETTINGCHANGE()
-    ON_COMMAND(ID_GET_APPZ, &CMainFrame::OnGetAppz)
+//    ON_COMMAND(ID_GET_APPZ, &CMainFrame::OnGetAppz)
+    ON_COMMAND(ID_VIEW_STARTMENU, &CMainFrame::OnViewStartmenu)
+    ON_COMMAND(ID_APPZ_DETAILS, &CMainFrame::OnAppzDetails)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -417,14 +420,90 @@ void CMainFrame::SetManager(std::shared_ptr<CFileManager> pManager)
     m_pManager = pManager;
 }
 
-
-void CMainFrame::OnGetAppz()
+void CMainFrame::FillStartMenu()
 {
-    // TODO: Add your command handler code here
-    // Do the job of appz retrieval 
-    CString strPath = _T("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs");
-    CFileManager::SearchDrive(_T("*.*"), strPath, true, false, m_wndApplicationView._hAppz);
-    m_wndApplicationView.m_wndFileView.Expand(m_wndApplicationView._hAppz, TVE_EXPAND);
+    for (shared_ptr<ApplicationLink> link : GetManager()->m_Links)
+    {
+        HTREEITEM hItem = m_wndApplicationView.m_wndFileView.InsertItem(link->_name.c_str(), 2, 2, m_wndApplicationView._hStartMenu);
+        m_wndApplicationView.m_wndFileView.SetItemData(hItem, (DWORD_PTR)(link.get()));
+    }
+}
+
+bool CMainFrame::ReplaceView(CRuntimeClass* pViewClass)
+{
+    CCreateContext context;
+    CView* pCurrentView;
+
+    // If no active view for the frame, return FALSE because
+    // thisfunction retrieves the current document from the active
+    // view.
+    if ((pCurrentView = GetActiveView()) == NULL)
+        return FALSE;
+
+    // If we're already displaying this kind of view, no need
+    // to go further.
+    if ((pCurrentView->IsKindOf(pViewClass)) == TRUE)
+        return TRUE;
+
+    // Get pointer to CDocument object so that it can be used
+    // in the creation process of the new view.
+    CDocument* pDoc = pCurrentView->GetDocument();
+
+    // Set flag so that document will not be deleted when
+    // view is destroyed.
+    BOOL bAutoDelete = pDoc->m_bAutoDelete;
+    pDoc->m_bAutoDelete = FALSE;
+    // Delete existing view
+    pCurrentView->DestroyWindow();
+    // restore flag
+    pDoc->m_bAutoDelete = bAutoDelete;
+
+    // Create new view and redraw.
+    context.m_pNewViewClass = pViewClass;
+    context.m_pCurrentDoc = pDoc;
+    context.m_pNewDocTemplate = NULL;
+    context.m_pLastView = NULL;
+    context.m_pCurrentFrame = this;
+
+    CView* pNewView = (CView*)pViewClass->CreateObject();
+
+    if (pNewView == NULL)
+    {
+        return false;
+    }
+
+    if (!pNewView->Create(NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, &context))
+    {
+        return false;
+    }
+
+    // WM_INITIALUPDATE is define in AFXPRIV.H.
+    pNewView->SendMessage(WM_INITIALUPDATE, 0, 0);
+
+    RecalcLayout();
+
+    pNewView->UpdateWindow();
+
+    SetActiveView(pNewView);
+
+    return true;
 }
 
 
+void CMainFrame::OnViewStartmenu()
+{
+    // TODO: Add your command handler code here
+    ReplaceView(RUNTIME_CLASS(CStartMenuView));
+}
+
+
+void CMainFrame::OnAppzDetails()
+{
+    CMyDesktopApp* pApp = (CMyDesktopApp*)AfxGetApp();
+    pApp->m_bApplicationViewLoading = true;
+
+    // TODO: Add your command handler code here
+    ReplaceView(RUNTIME_CLASS(CMyDesktopViewEx));
+
+    pApp->m_bApplicationViewLoading = false;
+}

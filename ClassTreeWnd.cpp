@@ -2,6 +2,8 @@
 #include "MyDesktop.h"
 #include "ClassTreeWnd.h"
 #include "MainFrm.h"
+#include "MyDesktopViewEx.h"
+#include "StartMenuView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -86,6 +88,11 @@ void CClassTreeWnd::OnNMClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CClassTreeWnd::OnTvnItemChanged(NMHDR* pNMHDR, LRESULT* pResult)
 {
+
+    CMyDesktopApp* pApp = (CMyDesktopApp*)AfxGetApp();
+    if (pApp->m_bApplicationViewLoading == true)
+        return;
+
     NMTVITEMCHANGE* pNMTVItemChange = reinterpret_cast<NMTVITEMCHANGE*>(pNMHDR);
     // TODO: Add your control notification handler code here
     *pResult = 0;
@@ -94,11 +101,25 @@ void CClassTreeWnd::OnTvnItemChanged(NMHDR* pNMHDR, LRESULT* pResult)
     if (hItem == NULL)
         return;
 
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+
+    CString strItemText = GetItemText(hItem);
+    if (strItemText == _T("Start Menu"))
+    {
+        //pMainFrame->ReplaceView(RUNTIME_CLASS(CStartMenuView));
+        return;
+    }
+
+    //pMainFrame->ReplaceView(RUNTIME_CLASS(CMyDesktopViewEx));
+
     ApplicationLink* pLink = (ApplicationLink*)GetItemData(hItem);
     if (pLink == NULL)
         return;
 
-    CWnd* pWnd = AfxGetMainWnd();
-    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+    //CWnd* pWnd = AfxGetMainWnd();
+    //CMainFrame* pMainFrame = (CMainFrame*)pWnd;
     pMainFrame->GetManager()->ProcessLink(pLink);
+
+
 }
