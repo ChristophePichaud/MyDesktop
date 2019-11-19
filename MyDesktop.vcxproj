@@ -197,6 +197,7 @@
     <ClInclude Include="MyDesktop.h" />
     <ClInclude Include="MyDesktopDoc.h" />
     <ClInclude Include="MyDesktopView.h" />
+    <ClInclude Include="MyDesktopViewEx.h" />
     <ClInclude Include="MyShell.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="pch.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="MyDesktop.cpp" />
     <ClCompile Include="MyDesktopDoc.cpp" />
     <ClCompile Include="MyDesktopView.cpp" />
+    <ClCompile Include="MyDesktopViewEx.cpp" />
     <ClCompile Include="MyShell.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="pch.cpp">

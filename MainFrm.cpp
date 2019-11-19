@@ -17,6 +17,7 @@
 #include "MyDesktop.h"
 #include "MainFrm.h"
 #include "FileManager.h"
+#include "MyDesktopViewEx.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -21,6 +21,7 @@
 
 #include "MyDesktopDoc.h"
 #include "MyDesktopView.h"
+#include "MyDesktopViewEx.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -131,8 +132,9 @@ BOOL CMyDesktopApp::InitInstance()
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CMyDesktopDoc),
 		RUNTIME_CLASS(CMainFrame),       // main SDI frame window
-		RUNTIME_CLASS(CMyDesktopView));
-	if (!pDocTemplate)
+		RUNTIME_CLASS(CMyDesktopViewEx));
+        //RUNTIME_CLASS(CMyDesktopView));
+    if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
 

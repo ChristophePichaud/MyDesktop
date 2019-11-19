@@ -63,6 +63,9 @@
     <ClInclude Include="ClassTreeWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyDesktopViewEx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyDesktop.cpp">
@@ -96,6 +99,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ClassTreeWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyDesktopViewEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

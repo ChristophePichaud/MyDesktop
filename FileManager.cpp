@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "FileManager.h"
 #include "MainFrm.h"
+#include "MyDesktopViewEx.h"
 
 CFileManager::CFileManager()
 {
@@ -54,7 +55,7 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
                     // ADD TO COLLECTION TYPE
                     std::shared_ptr<ApplicationLink> al = std::make_shared<ApplicationLink>();
                     al->_name = T2W((LPTSTR)(LPCTSTR)strTheNameOfTheFile); //strFile;
-                    al->_filepathname = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
+                    al->_linkFilePathName = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
 
                     pMainFrame->GetManager()->m_Links.push_back(al);
                     //this->UpdateSolution(cf);
@@ -143,7 +144,7 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
 
     WCHAR lpszPath[255];
     int iPathBufferSize = 255;
-    const wchar_t* fn = pLink->_filepathname.c_str();
+    const wchar_t* fn = pLink->_linkFilePathName.c_str();
 
     HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize);
     if (FAILED(hr))
@@ -153,4 +154,10 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     }
 
     AfxMessageBox(lpszPath);
+    /*
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+    CView* pView = pMainFrame->GetActiveView();
+    CMyDsktopViewEx* pRealView = (CMyDesktopViewEx*)pView;
+    */
 }

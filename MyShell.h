@@ -8,8 +8,8 @@ public:
 
 public:
     wstring _name;
-    wstring _filepathname;
-
+    wstring _linkFilePathName;
+    wstring _appFilePathName;
 };
 
 class ProgramManager

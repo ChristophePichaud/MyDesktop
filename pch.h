@@ -15,5 +15,6 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <afxext.h>
 using namespace std;
 #endif //PCH_H
