@@ -102,6 +102,7 @@ public:
 //    afx_msg void OnGetAppz();
     afx_msg void OnViewStartmenu();
     afx_msg void OnAppzDetails();
+    afx_msg void OnViewStartmenu2();
 };
 
 

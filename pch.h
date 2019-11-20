@@ -10,6 +10,7 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
+#include <sstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -18,5 +19,10 @@
 #include <memory>
 #include <afxext.h>
 #include <afxext.h>
+#include <afxext.h>
 using namespace std;
+
+#include <GdiPlus.h>
+using namespace Gdiplus;
+
 #endif //PCH_H

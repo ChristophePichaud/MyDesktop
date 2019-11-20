@@ -19,6 +19,7 @@
 #include "FileManager.h"
 #include "MyDesktopViewEx.h"
 #include "StartMenuView.h"
+#include "StartMenuViewGDIPlus.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,6 +44,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 //    ON_COMMAND(ID_GET_APPZ, &CMainFrame::OnGetAppz)
     ON_COMMAND(ID_VIEW_STARTMENU, &CMainFrame::OnViewStartmenu)
     ON_COMMAND(ID_APPZ_DETAILS, &CMainFrame::OnAppzDetails)
+    ON_COMMAND(ID_VIEW_STARTMENU2, &CMainFrame::OnViewStartmenu2)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -506,4 +508,11 @@ void CMainFrame::OnAppzDetails()
     ReplaceView(RUNTIME_CLASS(CMyDesktopViewEx));
 
     pApp->m_bApplicationViewLoading = false;
+}
+
+
+void CMainFrame::OnViewStartmenu2()
+{
+    // TODO: Add your command handler code here
+    ReplaceView(RUNTIME_CLASS(CStartMenuViewGDIPlus));
 }
