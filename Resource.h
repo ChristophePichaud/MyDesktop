@@ -75,19 +75,20 @@
 #define IDD_CStartMenuView              311
 #define IDC_EDIT_APPLICATION            1000
 #define IDC_EDIT_PATH                   1001
+#define IDC_LIST1                       1001
+#define IDC_APPLICATIONS                1001
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_GET_APPZ                     32771
 #define ID_VIEW_STARTMENU               32773
-#define ID_BUTTON3                      32774
 #define ID_APPZ_DETAILS                 32774
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        311
+#define _APS_NEXT_RESOURCE_VALUE        312
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif

@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <map>
 #include <memory>
 #include <afxext.h>
 #include <afxext.h>

@@ -55,8 +55,12 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
                     // ADD TO COLLECTION TYPE
                     std::shared_ptr<ApplicationLink> al = std::make_shared<ApplicationLink>();
                     al->_name = T2W((LPTSTR)(LPCTSTR)strTheNameOfTheFile); //strFile;
+                    al->_appFilePathName = _T("");
                     al->_linkFilePathName = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
-
+                    al->_hIcon = 0;
+                    al->_iconIndex = 0;
+                    ProcessLink(al);
+                    ExtractIcon(al);
                     pMainFrame->GetManager()->m_Links.push_back(al);
                     //this->UpdateSolution(cf);
                     HTREEITEM hItem = pMainFrame->m_wndApplicationView.m_wndFileView.InsertItem(strTheNameOfTheFile /*cf->_name.c_str()*/, 2, 2, parent);
@@ -143,6 +147,7 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     int iPathBufferSize = 255;
     const wchar_t* fn = pLink->_linkFilePathName.c_str();
     int iconIndex = 0;
+    pLink->_iconIndex = iconIndex;
 
     HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize, iconIndex);
     if (FAILED(hr))
@@ -170,6 +175,44 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     pMyView->Invalidate();
 }
 
+void CFileManager::ProcessLink(shared_ptr<ApplicationLink> link)
+{
+    //HRESULT CFileManager::ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
+
+    WCHAR lpszPath[255];
+    int iPathBufferSize = 255;
+    const wchar_t* fn = link->_linkFilePathName.c_str();
+    int iconIndex = 0;
+    link->_iconIndex = iconIndex;
+
+    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize, iconIndex);
+    if (FAILED(hr))
+    {
+        wcout << "ResolveIt failed" << endl;
+        return;
+    }
+
+    link->_appFilePathName = lpszPath;
+    link->_iconIndex = iconIndex;
+}
+
+void CFileManager::ExtractIcon(shared_ptr<ApplicationLink> pLink)
+{
+    HICON phIcon;
+    UINT pIconId = 0;
+    int cx = 0;
+    int cy = 0;
+    UINT res = ::PrivateExtractIcons(pLink->_appFilePathName.c_str(), pLink->_iconIndex, cx, cy, &phIcon, &pIconId, 1, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
+    if (res == 0xFFFFFFFF)
+    {
+        //AfxMessageBox(_T("PrivateExtractIconsFAILED"));
+        pLink->_hIcon = 0;
+        return;
+    }
+
+    pLink->_hIcon = phIcon;
+}
+
 void CFileManager::ExtractIcon(ApplicationLink* pLink)
 {
     HICON phIcon;
@@ -177,9 +220,11 @@ void CFileManager::ExtractIcon(ApplicationLink* pLink)
     int cx = 0;
     int cy = 0;
     UINT res = ::PrivateExtractIcons(pLink->_appFilePathName.c_str(), pLink->_iconIndex, cx, cy, &phIcon, &pIconId, 1, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
-    if (res == 0xFFFFFFF)
+    if (res == 0xFFFFFFFF)
     {
-        AfxMessageBox(_T("PrivateExtractIconsFAILED"));
+        //AfxMessageBox(_T("PrivateExtractIconsFAILED"));
+        pLink->_hIcon = 0;
+        return;
     }
 
     pLink->_hIcon = phIcon;

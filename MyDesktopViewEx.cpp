@@ -63,6 +63,7 @@ void CMyDesktopViewEx::OnInitialUpdate()
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
     pMainFrame->GetManager()->ClearTree();
 
+
     CString strPath = _T("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs");
     CFileManager::SearchDrive(_T("*.*"), strPath, true, false, pMainFrame->m_wndApplicationView._hAppz);
     pMainFrame->m_wndApplicationView.m_wndFileView.Expand(pMainFrame->m_wndApplicationView._hAppz, TVE_EXPAND);

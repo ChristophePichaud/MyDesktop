@@ -30,6 +30,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
     virtual void OnInitialUpdate();
+
+public:
+    CListCtrl m_List;
+    CImageList m_ImageList;
 };
 
 
