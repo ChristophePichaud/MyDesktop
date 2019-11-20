@@ -73,9 +73,10 @@
 #define IDR_RIBBON                      307
 #define IDD_CMyDesktopViewEx            310
 #define IDD_CStartMenuView              311
+#define IDI_ICON1                       312
+#define IDI_NOICONAPP                   312
 #define IDC_EDIT_APPLICATION            1000
 #define IDC_EDIT_PATH                   1001
-#define IDC_LIST1                       1001
 #define IDC_APPLICATIONS                1001
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_GET_APPZ                     32771
@@ -86,7 +87,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        312
+#define _APS_NEXT_RESOURCE_VALUE        313
 #define _APS_NEXT_COMMAND_VALUE         32775
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           312

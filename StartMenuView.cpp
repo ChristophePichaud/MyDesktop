@@ -58,8 +58,14 @@ void CStartMenuView::OnInitialUpdate()
     CWnd* pWnd = AfxGetMainWnd();
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
 
-    m_ImageList.Create(48, 48, ILC_COLOR24, 1, 1024);
-    int count = 0;
+    m_ImageList.Create(24, 24, ILC_COLOR24 | ILD_TRANSPARENT, 1, 1024);
+    //m_ImageList.Create(48, 48, ILC_COLOR24 | ILD_TRANSPARENT, 1, 1024);
+
+    HICON hDefaultIcon = ::LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDI_NOICONAPP));  
+    m_ImageList.Add(hDefaultIcon);
+
+
+    int count = 1;
     map<wstring, int> mapAppz;
     for (shared_ptr<ApplicationLink> link : pMainFrame->GetManager()->m_Links)
     {
@@ -74,7 +80,7 @@ void CStartMenuView::OnInitialUpdate()
 
     m_List.SetImageList(&m_ImageList, LVSIL_NORMAL);
 
-    count = 0;
+    count = 1;
     for (shared_ptr<ApplicationLink> link : pMainFrame->GetManager()->m_Links)
     {
         LVITEMW lvItem;

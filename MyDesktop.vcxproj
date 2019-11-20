@@ -236,6 +236,7 @@
     <Image Include="res\fileview24.bmp" />
     <Image Include="res\file_view.ico" />
     <Image Include="res\file_view_hc.ico" />
+    <Image Include="res\icon1.ico" />
     <Image Include="res\info.bmp" />
     <Image Include="res\main.bmp" />
     <Image Include="res\MyDesktop.ico" />
