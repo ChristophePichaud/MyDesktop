@@ -2341,8 +2341,16 @@ void CStartMenuElement::Draw(CDrawingContext& ctxt)
         Gdiplus::Font font(&fontFamily, 12, FontStyleRegular, UnitPixel);
         graphics->SetTextRenderingHint(TextRenderingHintAntiAlias);
 
+        StringFormat stringFormat;
+        stringFormat.SetAlignment(StringAlignment::StringAlignmentCenter);
+        stringFormat.SetLineAlignment(StringAlignment::StringAlignmentCenter);
+
         m_text = m_attr.m_Name;
-        graphics->DrawString(CStringW(this->m_text.c_str()), -1, &font, PointF(pointText.x, pointText.y), &solidBrushText);
+
+        RectF rectF(rect.left, rect.top, rect.Width(), rect.Height());
+
+        graphics->DrawString(CStringW(this->m_text.c_str()), -1, &font, rectF, &stringFormat, &solidBrushText);
+        //graphics->DrawString(CStringW(this->m_text.c_str()), -1, &font, PointF(pointText.x, pointText.y), &solidBrushText);
     }
 }
 
@@ -3248,16 +3256,16 @@ void CElementManager::Draw(CStartMenuViewEx* pView, CDC* pDC)
         //    the m_text property can be optional and if it exists,
         //    it should be appended to the rendering area by creating a dedicated object. 
         //    We call it CSimpleTextElement.
-        if (pElement->m_text.empty() == false &&
-            (pElement->m_type != ElementType::type_text)
-            )
-        {
-            //std::shared_ptr<CElement> pTextElement = make_shared<CSimpleTextElement>();
-            std::shared_ptr<CElement> pTextElement(new CSimpleTextElement());
-            pTextElement->m_rect = pElement->m_rect;
-            pTextElement->m_text = pElement->m_text;
-            pTextElement->Draw(ctxt);
-        }
+        //if (pElement->m_text.empty() == false &&
+        //    (pElement->m_type != ElementType::type_text)
+        //    )
+        //{
+        //    //std::shared_ptr<CElement> pTextElement = make_shared<CSimpleTextElement>();
+        //    std::shared_ptr<CElement> pTextElement(new CSimpleTextElement());
+        //    pTextElement->m_rect = pElement->m_rect;
+        //    pTextElement->m_text = pElement->m_text;
+        //    pTextElement->Draw(ctxt);
+        //}
 
         //if( !pDC->IsPrinting() && IsSelected(pObj) )
         //	DrawTracker(pObj, pDC, TrackerState::selected);
