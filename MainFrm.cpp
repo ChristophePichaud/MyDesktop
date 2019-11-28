@@ -15,6 +15,7 @@
 #include "pch.h"
 #include "framework.h"
 #include "MyDesktop.h"
+#include "DrawingStuff.h"
 #include "MainFrm.h"
 #include "FileManager.h"
 #include "MyDesktopViewEx.h"
@@ -515,4 +516,59 @@ void CMainFrame::OnViewStartmenu2()
 {
     // TODO: Add your command handler code here
     ReplaceView(RUNTIME_CLASS(CStartMenuViewGDIPlus));
+}
+
+void CMainFrame::LogDebug(CString message)
+{
+    m_wndOutput.AddStringToDebug(message);
+}
+
+void CMainFrame::SetManager(CElementManager* pManager)
+{
+    //m_wndProperties.SetManager(pManager);
+}
+
+void CMainFrame::SetView(CStartMenuViewEx* pView)
+{
+    //m_pModelerView = pView;
+}
+
+void CMainFrame::UpdatePropertiesFromObject(std::shared_ptr<CElement> pElement)
+{
+    //m_wndProperties.UpdateProperties(pElement);
+}
+
+void CMainFrame::InitClassView()
+{
+    //m_wndClassView.InitClassView();
+}
+
+void CMainFrame::InitFileView()
+{
+    //m_wndFileView.InitFileView();
+}
+
+void CMainFrame::UpdateFileViewFromObject(std::shared_ptr<CElement> pElement)
+{
+    //m_wndFileView.UpdateFromObject(pElement);
+}
+
+void CMainFrame::UpdateClassViewFromObject(std::shared_ptr<CElement> pElement)
+{
+    //m_wndClassView.UpdateFromObject(pElement);
+}
+
+COLORREF CMainFrame::GetColorFromColorButton(int nButtonID)
+{
+    return -1;
+}
+
+int CMainFrame::GetWidthFromLineWidth(int nButtonID)
+{
+    return 0;
+}
+
+void CMainFrame::UpdateRibbonUI(CStartMenuViewEx* pView)
+{
+
 }

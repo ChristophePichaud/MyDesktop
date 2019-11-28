@@ -208,3 +208,11 @@ void COutputList::OnViewOutput()
 
 	}
 }
+
+void COutputWnd::AddStringToDebug(CString message)
+{
+    m_wndOutputDebug.AddString(message);
+    int count = m_wndOutputDebug.GetCount();
+    if (count > 0)
+        m_wndOutputDebug.SetCurSel(count - 1);
+}

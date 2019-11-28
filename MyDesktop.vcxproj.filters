@@ -73,6 +73,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DrawingStuff.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="StartMenuViewEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -120,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DrawingStuff.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="StartMenuViewEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

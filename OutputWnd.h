@@ -60,6 +60,9 @@ protected:
 public:
 	virtual ~COutputWnd();
 
+public:
+    void AddStringToDebug(CString message);
+
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);

@@ -14,6 +14,7 @@
 
 
 #pragma once
+#include "DrawingStuff.h"
 
 
 class CMyDesktopDoc : public CDocument
@@ -24,6 +25,11 @@ protected: // create from serialization only
 
 // Attributes
 public:
+    CElementManager* m_pManager;
+    CElementManager* GetManager() const
+    {
+        return m_pManager;
+    }
 
 // Operations
 public:

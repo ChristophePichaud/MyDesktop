@@ -1,9 +1,11 @@
 #pragma once
-class CDrawingStuff
-{
-};
 
-#ifdef NOT_COMPILE
+class CElement;
+class CElementContainer;
+class CElementManager;
+class CDrawingContext;
+class CStartMenuViewEx;
+class CMyDesktopDoc;
 
 enum SelectMode : int
 {
@@ -115,17 +117,79 @@ enum TrackerState
 #define HINT_DELETE_SELECTION   3
 #define HINT_UPDATE_OLE_ITEMS   4
 
+class CGuid
+{
+public:
+    CGuid();
+    virtual ~CGuid(void);
+
+public:
+    CString ToString();
+
+private:
+    UUID m_uuid;
+
+};
+
 class CShapeType
 {
 public:
     static ShapeType ToShapeType(int value);
 };
 
-class CElement;
-class CModeler1View;
-class CElementContainer;
-class CElementManager;
-class CDrawingContext;
+// special 'list' class for this application(requires afxtempl.h)
+typedef CTypedPtrList<CObList, CElement*> CElementList;
+
+class CElementContainer : public CObject
+{
+private:
+
+public:
+    DECLARE_SERIAL(CElementContainer);
+    CElementContainer();
+    virtual ~CElementContainer(void);
+
+    // Operations
+public:
+    virtual void Serialize(CElementManager* pElementManager, CArchive& ar);   // overridden for document i/o
+
+// Operations
+public:
+    std::shared_ptr<CElement> FindElement(ElementType type);
+    std::shared_ptr<CElement> FindElement(std::wstring objectId);
+    bool FindElement(std::wstring objectId, vector<std::shared_ptr<CElement>>::iterator& it);
+    std::shared_ptr<CElement> ObjectAt(const CPoint& point);
+    void Remove(const CElementContainer& selection);
+    void Copy(const CElementContainer& selection);
+    void Clone(const CElementContainer& selection);
+    void ChangeInnerAttributes();
+    void CopyWithAttributesChange(const CElementContainer& selection);
+
+    // Managing Object Positions
+public:
+    void MoveToFront(const CElementContainer& selection);
+    void MoveForward(const CElementContainer& selection);
+    void MoveBackward(const CElementContainer& selection);
+    void MoveToBack(const CElementContainer& selection);
+
+    // Debugging Operations
+public:
+    void DebugDumpObjects(CStartMenuViewEx* pView);
+
+    // Operations MFC like
+public:
+    std::shared_ptr<CElement> GetHead();
+    int GetCount();
+    void RemoveAll();
+    void Remove(std::shared_ptr<CElement> pElement);
+    void AddTail(std::shared_ptr<CElement> pElement);
+
+    // Attributes
+public:
+    vector<std::shared_ptr<CElement>> m_objects;
+    //CElementList m_objects;	
+};
+
 
 class CElement : public CObject
 {
@@ -145,7 +209,7 @@ public:
     // Virtual Operations
 public:
     virtual void Serialize(CArchive& ar);   // overridden for document i/o
-    virtual void Draw(CModeler1View* pView, CDC* pDC);
+    virtual void Draw(CStartMenuViewEx* pView, CDC* pDC);
     virtual void Draw(CDrawingContext& ctxt);
 
     // Operations
@@ -161,12 +225,12 @@ public:
     // Managing/Viewing Object Selection & Tracker helpers
 public:
     int GetHandleCount();
-    int HitTest(CPoint point, CModeler1View* pView, bool bSelected);
-    CRect GetHandleRect(int nHandleID, CModeler1View* pView);
+    int HitTest(CPoint point, CStartMenuViewEx* pView, bool bSelected);
+    CRect GetHandleRect(int nHandleID, CStartMenuViewEx* pView);
     CPoint GetHandle(int nHandle);
     void DrawTracker(CDrawingContext& ctxt, TrackerState state);
     HCURSOR GetHandleCursor(int nHandle);
-    void MoveHandleTo(int nHandle, CPoint point, CModeler1View* pView);
+    void MoveHandleTo(int nHandle, CPoint point, CStartMenuViewEx* pView);
 
     // Managing Object Format
 public:
@@ -199,7 +263,7 @@ public:
     bool m_bMoving;
     // Connectivity
     CElementManager* m_pManager;
-    CModeler1View* m_pView;
+    CStartMenuViewEx* m_pView;
 
     // Methods for Attributes
 public:
@@ -211,7 +275,7 @@ public:
     // Extra Pointer plumbing
 public:
     CElementManager* GetManager() const { return m_pManager; }
-    CModeler1View* GetView() const { return m_pView; }
+    CStartMenuViewEx* GetView() const { return m_pView; }
 };
 
 class CDrawingContext
@@ -353,61 +417,61 @@ public:
 
     // Debugging Operations
 public:
-    void DebugDumpObjects(CModeler1View* pView);
+    void DebugDumpObjects(CStartMenuViewEx* pView);
 
     // Operations
 public:
-    void Serialize_LoadAsXML(CModeler1View* pView);
-    void Serialize_SaveAsXML(CModeler1View* pView);
-    void ConnectToMainFrame(CModeler1View* pView);
+    void Serialize_LoadAsXML(CStartMenuViewEx* pView);
+    void Serialize_SaveAsXML(CStartMenuViewEx* pView);
+    void ConnectToMainFrame(CStartMenuViewEx* pView);
     void ConnectToPropertyGrid();
     virtual void Serialize(CArchive& ar);   // overridden for document i/o
-    void RemoveSelectedObjects(CModeler1View* pView);
-    void ViewToManager(CModeler1View* pView, CPoint& point);
-    void ViewToManager(CModeler1View* pView, CRect& rect);
-    void ManagerToView(CModeler1View* pView, CPoint& point);
-    void ManagerToView(CModeler1View* pView, CRect& rect);
+    void RemoveSelectedObjects(CStartMenuViewEx* pView);
+    void ViewToManager(CStartMenuViewEx* pView, CPoint& point);
+    void ViewToManager(CStartMenuViewEx* pView, CRect& rect);
+    void ManagerToView(CStartMenuViewEx* pView, CPoint& point);
+    void ManagerToView(CStartMenuViewEx* pView, CRect& rect);
     COLORREF GetPaperColor() const { return m_paperColor; }
-    void Invalidate(CModeler1View* pView, std::shared_ptr<CElement> pElement);
-    void Invalidate(CModeler1View* pView);
-    void InvalObj(CModeler1View* pView, std::shared_ptr<CElement> pElement);
+    void Invalidate(CStartMenuViewEx* pView, std::shared_ptr<CElement> pElement);
+    void Invalidate(CStartMenuViewEx* pView);
+    void InvalObj(CStartMenuViewEx* pView, std::shared_ptr<CElement> pElement);
     CSize GetSize() const { return m_size; }
     void UpdateFromPropertyGrid(std::wstring objectId, std::wstring name, std::wstring value);
     void UpdateFromPropertyGrid(std::wstring objectId, std::wstring name, COLORREF color);
     void UpdateFromPropertyGrid(std::wstring objectId, std::wstring name, long value);
-    void ActivateView(CModeler1View* pView, bool bActivate, CView* pActiveView, CView* pDeactiveView);
+    void ActivateView(CStartMenuViewEx* pView, bool bActivate, CView* pActiveView, CView* pDeactiveView);
 
     // Managing Font operations
 public:
-    void OnFont(CModeler1View* pView);
-    void OnFontSize(CModeler1View* pView);
+    void OnFont(CStartMenuViewEx* pView);
+    void OnFontSize(CStartMenuViewEx* pView);
 
     // Managing Clipboard operations
 public:
-    void OnEditCut(CModeler1View* pView);
-    void OnEditCopy(CModeler1View* pView);
-    void OnEditPaste(CModeler1View* pView);
+    void OnEditCut(CStartMenuViewEx* pView);
+    void OnEditCopy(CStartMenuViewEx* pView);
+    void OnEditPaste(CStartMenuViewEx* pView);
 
     // Managing Object Positions
 public:
-    void MoveToFront(CModeler1View* pView);
-    void MoveForward(CModeler1View* pView);
-    void MoveBackward(CModeler1View* pView);
-    void MoveToBack(CModeler1View* pView);
+    void MoveToFront(CStartMenuViewEx* pView);
+    void MoveForward(CStartMenuViewEx* pView);
+    void MoveBackward(CStartMenuViewEx* pView);
+    void MoveToBack(CStartMenuViewEx* pView);
 
     // Managing Background drawing
 public:
-    void DrawBackground(CModeler1View* pView, CDC* pDC);
+    void DrawBackground(CStartMenuViewEx* pView, CDC* pDC);
 
     // Managing UI object connections
 public:
-    void FindAConnectionFor(std::shared_ptr<CElement> pElement, CPoint point, CModeler1View* pView);
+    void FindAConnectionFor(std::shared_ptr<CElement> pElement, CPoint point, CStartMenuViewEx* pView);
 
     // Managing UI dependencies (Ribbon UI, Property Grid, ClassView)
 public:
-    void UpdateUI(CModeler1View* pView, std::shared_ptr<CElement> pElement);
-    void UpdateRibbonUI(CModeler1View* pView, std::shared_ptr<CElement> pElement);
-    void UpdatePropertyGrid(CModeler1View* pView, std::shared_ptr<CElement> pElement);
+    void UpdateUI(CStartMenuViewEx* pView, std::shared_ptr<CElement> pElement);
+    void UpdateRibbonUI(CStartMenuViewEx* pView, std::shared_ptr<CElement> pElement);
+    void UpdatePropertyGrid(CStartMenuViewEx* pView, std::shared_ptr<CElement> pElement);
     void UpdateClassView();
     void UpdateClassView(std::shared_ptr<CElement> pElement);
     void UpdateFileView();
@@ -415,17 +479,17 @@ public:
 
     // Managing Object Format
 public:
-    void FillColor(CModeler1View* pView);
-    void NoFillColor(CModeler1View* pView);
-    void LineColor(CModeler1View* pView);
-    void LineWidth(CModeler1View* pView, UINT nID);
-    void PageColor(CModeler1View* pView);
+    void FillColor(CStartMenuViewEx* pView);
+    void NoFillColor(CStartMenuViewEx* pView);
+    void LineColor(CStartMenuViewEx* pView);
+    void LineWidth(CStartMenuViewEx* pView, UINT nID);
+    void PageColor(CStartMenuViewEx* pView);
 
     // Managing Zoom Operations
 public:
-    void Zoom(CModeler1View* pView);
-    void ZoomIn(CModeler1View* pView);
-    void ZoomOut(CModeler1View* pView);
+    void Zoom(CStartMenuViewEx* pView);
+    void ZoomIn(CStartMenuViewEx* pView);
+    void ZoomOut(CStartMenuViewEx* pView);
 
     // Managing Object Selection
 public:
@@ -434,76 +498,22 @@ public:
     bool Select(std::shared_ptr<CElement> pElement);
     bool Deselect(std::shared_ptr<CElement> pElement);
     void SelectNone();
-    void DrawSelectionRect(CModeler1View* pView);
+    void DrawSelectionRect(CStartMenuViewEx* pView);
 
     // Overridables
 public:
-    virtual void PrepareDC(CModeler1View* pView, CDC* pDC, CPrintInfo* pInfo);
-    virtual void Draw(CModeler1View* pView, CDC* pDC);
-    virtual void DrawEx(CModeler1View* pView, CDC* pDC);
-    virtual void Update(CModeler1View* pView, LPARAM lHint, CObject* pHint);
+    virtual void PrepareDC(CStartMenuViewEx* pView, CDC* pDC, CPrintInfo* pInfo);
+    virtual void Draw(CStartMenuViewEx* pView, CDC* pDC);
+    virtual void DrawEx(CStartMenuViewEx* pView, CDC* pDC);
+    virtual void Update(CStartMenuViewEx* pView, LPARAM lHint, CObject* pHint);
 
     // UI Handlers
 public:
-    virtual void OnLButtonDown(CModeler1View* pView, UINT nFlags, const CPoint& cpoint);
-    virtual void OnLButtonDblClk(CModeler1View* pView, UINT nFlags, const CPoint& cpoint);
-    virtual void OnLButtonUp(CModeler1View* pView, UINT nFlags, const CPoint& cpoint);
-    virtual void OnMouseMove(CModeler1View* pView, UINT nFlags, const CPoint& cpoint);
+    virtual void OnLButtonDown(CStartMenuViewEx* pView, UINT nFlags, const CPoint& cpoint);
+    virtual void OnLButtonDblClk(CStartMenuViewEx* pView, UINT nFlags, const CPoint& cpoint);
+    virtual void OnLButtonUp(CStartMenuViewEx* pView, UINT nFlags, const CPoint& cpoint);
+    virtual void OnMouseMove(CStartMenuViewEx* pView, UINT nFlags, const CPoint& cpoint);
 };
-
-// special 'list' class for this application(requires afxtempl.h)
-typedef CTypedPtrList<CObList, CElement*> CElementList;
-
-class CElementContainer : public CObject
-{
-private:
-
-public:
-    DECLARE_SERIAL(CElementContainer);
-    CElementContainer();
-    virtual ~CElementContainer(void);
-
-    // Operations
-public:
-    virtual void Serialize(CElementManager* pElementManager, CArchive& ar);   // overridden for document i/o
-
-// Operations
-public:
-    std::shared_ptr<CElement> FindElement(ElementType type);
-    std::shared_ptr<CElement> FindElement(std::wstring objectId);
-    bool FindElement(std::wstring objectId, vector<std::shared_ptr<CElement>>::iterator& it);
-    std::shared_ptr<CElement> ObjectAt(const CPoint& point);
-    void Remove(const CElementContainer& selection);
-    void Copy(const CElementContainer& selection);
-    void Clone(const CElementContainer& selection);
-    void ChangeInnerAttributes();
-    void CopyWithAttributesChange(const CElementContainer& selection);
-
-    // Managing Object Positions
-public:
-    void MoveToFront(const CElementContainer& selection);
-    void MoveForward(const CElementContainer& selection);
-    void MoveBackward(const CElementContainer& selection);
-    void MoveToBack(const CElementContainer& selection);
-
-    // Debugging Operations
-public:
-    void DebugDumpObjects(CModeler1View* pView);
-
-    // Operations MFC like
-public:
-    std::shared_ptr<CElement> GetHead();
-    int GetCount();
-    void RemoveAll();
-    void Remove(std::shared_ptr<CElement> pElement);
-    void AddTail(std::shared_ptr<CElement> pElement);
-
-    // Attributes
-public:
-    vector<std::shared_ptr<CElement>> m_objects;
-    //CElementList m_objects;	
-};
-
 
 // CDrawingElement command target
 
@@ -620,4 +630,3 @@ class CConnectableElement : public CElement
 public:
 };
 
-#endif

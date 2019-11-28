@@ -23,6 +23,7 @@
 using namespace std;
 
 #include <GdiPlus.h>
+#include <afxwin.h>
 using namespace Gdiplus;
 
 #endif //PCH_H

@@ -16,6 +16,9 @@
 #include "OutputWnd.h"
 #include "CalendarBar.h"
 #include "ApplicationViewBar.h"
+#include "MyDesktopDoc.h"
+#include "DrawingStuff.h"
+#include "StartMenuViewEx.h"
 #include "Resource.h"
 
 class COutlookBar : public CMFCOutlookBar
@@ -50,6 +53,7 @@ public:
 #endif
 
 public:
+    void LogDebug(CString message);
     std::shared_ptr<CFileManager> m_pManager;
     std::shared_ptr<CFileManager> GetManager() const
     {
@@ -59,6 +63,19 @@ public:
     //void CloseAllDocuments();
     void FillStartMenu();
     bool ReplaceView(CRuntimeClass* pViewClass);
+
+    // Operations
+public:
+    void SetManager(CElementManager* pManager);
+    void SetView(CStartMenuViewEx* pView);
+    void UpdatePropertiesFromObject(std::shared_ptr<CElement> pElement);
+    void InitClassView();
+    void UpdateClassViewFromObject(std::shared_ptr<CElement> pElement);
+    void InitFileView();
+    void UpdateFileViewFromObject(std::shared_ptr<CElement> pElement);
+    COLORREF GetColorFromColorButton(int nButtonID);
+    int GetWidthFromLineWidth(int nButtonID);
+    void UpdateRibbonUI(CStartMenuViewEx* pView);
 
 public:
     CApplicationViewBar m_wndApplicationView;
