@@ -41,7 +41,7 @@ END_MESSAGE_MAP()
 CMyDesktopDoc::CMyDesktopDoc() noexcept
 {
 	// TODO: add one-time construction code here
-
+    m_pManager = new CElementManager();
 }
 
 CMyDesktopDoc::~CMyDesktopDoc()

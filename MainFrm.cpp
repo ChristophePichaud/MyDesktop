@@ -21,6 +21,7 @@
 #include "MyDesktopViewEx.h"
 #include "StartMenuView.h"
 #include "StartMenuViewGDIPlus.h"
+#include "StartMenuViewEx.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -515,7 +516,7 @@ void CMainFrame::OnAppzDetails()
 void CMainFrame::OnViewStartmenu2()
 {
     // TODO: Add your command handler code here
-    ReplaceView(RUNTIME_CLASS(CStartMenuViewGDIPlus));
+    ReplaceView(RUNTIME_CLASS(CStartMenuViewEx)); // GDIPlus));
 }
 
 void CMainFrame::LogDebug(CString message)

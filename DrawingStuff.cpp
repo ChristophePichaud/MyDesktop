@@ -158,7 +158,7 @@ int CFactory::g_counter = 0;
 std::shared_ptr<CElement> CFactory::CreateElementOfType(ElementType type, ShapeType shapeType)
 {
     //std::shared_ptr<CElement> pNewElement = new CElement();
-    std::shared_ptr<CElement> pNewElement;
+    std::shared_ptr<CElement> pNewElement = nullptr;
     //pNewElement = make_shared<CElement>();
     /*
     #ifdef USE_BOOST
@@ -446,6 +446,28 @@ std::shared_ptr<CElement> CFactory::CreateElementOfType(ElementType type, ShapeT
         pNewElement = apNewElement;
         // No line around the object
         pNewElement->m_bColorLine = FALSE;
+    }
+
+    if (type == ElementType::type_start_menu)
+    {
+        std::shared_ptr<CStartMenuElement> apNewElement = make_shared<CStartMenuElement>();
+        pNewElement = apNewElement;
+        pNewElement->m_bColorLine = true;
+        pNewElement->m_bColorFill = true;
+        pNewElement->m_bSolidColorFill = true;
+
+        // Set same colors like development shapes
+        Color colorLineClass(255, 52, 101, 164);
+        Color colorFillClass(255, 200, 210, 233);
+
+        switch (shapeType)
+        {
+        case start_menu_element:
+            pNewElement->m_text = L"";
+            pNewElement->m_colorFill = colorFillClass.ToCOLORREF();
+            pNewElement->m_colorLine = colorLineClass.ToCOLORREF();
+            break;
+        }
     }
 
     //
@@ -2279,6 +2301,36 @@ void CImportElement::Draw(CDrawingContext& ctxt)
         }
     }
 }
+ 
+//
+// CStartMenuElement class
+//
+void CStartMenuElement::Draw(CDrawingContext& ctxt)
+{
+    CRect rect = m_rect;
+    Graphics* graphics = ctxt.GetGraphics();
+    Pen& colorPen = ctxt.GetPenColor();
+    SolidBrush& solidBrush = ctxt.GetBrushColor();
+    SolidBrush& solidBrushText = ctxt.GetBrushBlack();
+
+    if (m_shapeType == ShapeType::start_menu_element)
+    {
+        graphics->FillRectangle(&solidBrush, rect.left, rect.top, rect.Width(), rect.Height());
+        graphics->DrawRectangle(&colorPen, rect.left, rect.top, rect.Width(), rect.Height());
+
+        CPoint& p1 = ctxt.GetTopLeft();
+        CPoint& p2 = ctxt.GetBottomRight();
+        CPoint pointText(rect.left + 10, rect.top + 10);
+
+        // Font object
+        FontFamily fontFamily(L"Calibri");
+        Gdiplus::Font font(&fontFamily, 12, FontStyleRegular, UnitPixel);
+        graphics->SetTextRenderingHint(TextRenderingHintAntiAlias);
+
+        m_text = m_attr.m_Name;
+        graphics->DrawString(CStringW(this->m_text.c_str()), -1, &font, PointF(pointText.x, pointText.y), &solidBrushText);
+    }
+}
 
 //
 // CImageElement class
@@ -2858,7 +2910,7 @@ CElementManager::CElementManager()
     m_objectId = L"";
     m_lastPoint = CPoint(0, 0);
     m_paperColor = RGB(255, 255, 255); //RGB(242, 242, 200); //RGB(255, 255, 255); //RGB(188, 251, 255);
-    m_size = CSize(1500, 1500);
+    m_size = CSize(2500, 2500);
 
     // Initialize Current UI interaction members
     m_bDrawing = FALSE;
@@ -4135,4 +4187,53 @@ void CalcAutoPointRect(int count, std::shared_ptr<CElement> pNewElement)
 
 void CElementManager::FindAConnectionFor(std::shared_ptr<CElement> pElement, CPoint point, CStartMenuViewEx* pView)
 {
+}
+
+void CElementManager::LoadStartMenu(CStartMenuViewEx* pView)
+{
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+    int count = 1;
+    map<wstring, int> mapAppz;
+    for (shared_ptr<ApplicationLink> link : pMainFrame->GetManager()->m_Links)
+    {
+        if (link->_hIcon == 0)
+            continue;
+
+        //HICON hIcon = link->_hIcon;
+        mapAppz[link->_name] = count;
+        ++count;
+    }
+
+    count = 0;
+    for (shared_ptr<ApplicationLink> link : pMainFrame->GetManager()->m_Links)
+    {
+        //lvItem.pszText = (LPTSTR)link->_name.c_str();
+
+        std::wstring slink = link->_name;
+        if (slink.find(_T(".lnk")) == wstring::npos)
+        {
+            continue;
+        }
+
+        std::shared_ptr<CElement> pNewElement = CFactory::CreateElementOfType(ElementType::type_start_menu,
+            ShapeType::start_menu_element);
+        CElement* pElement = pNewElement.get();
+        CStartMenuElement* pSMElement = (CStartMenuElement*)pElement;
+
+        pSMElement->m_attr.m_Name = link->_name;
+        pNewElement->m_text = (CStringW)pSMElement->m_attr.m_Name.c_str();
+
+        CalcAutoPointRect(count, pNewElement);
+        pNewElement->m_pManager = this;
+        pNewElement->m_pView = pView;
+
+        // Add an object
+        m_objects.AddTail(pNewElement);
+        pView->LogDebug(_T("object created ->") + pNewElement->ToString());
+
+        ++count;
+    }
+
+    pView->Invalidate();
 }

@@ -1,5 +1,20 @@
 #pragma once
 
+class CStartMenuAttributes
+{
+public:
+    std::wstring m_Name;
+};
+
+
+////////////////////////////////////////////////////////////////////////////
+////////////
+/////
+// IMPORTED MODULES FROM UltraFluid Modeler
+/////
+////////////
+////////////////////////////////////////////////////////////////////////////
+
 class CElement;
 class CElementContainer;
 class CElementManager;
@@ -24,7 +39,8 @@ enum ElementType : int
     type_shapes_infrastructure,
     type_text,
     type_shapes_development,
-    type_shapes_import
+    type_shapes_import,
+    type_start_menu
 };
 
 #define OffsetShapes_Simple			0
@@ -33,6 +49,7 @@ enum ElementType : int
 #define OffsetShapes_Text			200
 #define OffsetShapes_Development	300
 #define OffsetShapes_Import			400
+#define OffsetShapes_StartMenu		400
 
 enum ShapeType : int
 {
@@ -100,6 +117,7 @@ enum ShapeType : int
     development_package_import,
     development_connector,
     import_class = OffsetShapes_Import,
+    start_menu_element = OffsetShapes_StartMenu,
     unknown = 1000
 };
 
@@ -500,6 +518,10 @@ public:
     void SelectNone();
     void DrawSelectionRect(CStartMenuViewEx* pView);
 
+    // Load Module Operations
+public:
+    void LoadStartMenu(CStartMenuViewEx* pView);
+
     // Overridables
 public:
     virtual void PrepareDC(CStartMenuViewEx* pView, CDC* pDC, CPrintInfo* pInfo);
@@ -630,3 +652,11 @@ class CConnectableElement : public CElement
 public:
 };
 
+class CStartMenuElement : public CElement
+{
+public:
+    virtual void Draw(CDrawingContext& ctxt);
+
+public:
+    CStartMenuAttributes m_attr;
+};

@@ -238,8 +238,10 @@ void CStartMenuViewEx::OnInitialUpdate()
     str.Format(_T("Windows CSize x=%d y=%d"), size.cx, size.cy);
     LogDebug(str);
 
-    GetManager()->UpdateClassView();
-    GetManager()->UpdateFileView();
+    //GetManager()->UpdateClassView();
+    //GetManager()->UpdateFileView();
+
+    GetManager()->LoadStartMenu(this);
 }
 
 void CStartMenuViewEx::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
