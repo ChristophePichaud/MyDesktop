@@ -121,6 +121,7 @@ CDrawingContext::CDrawingContext(std::shared_ptr<CElement> pElement)
     m_gdiPenColor(Color(255, 0, 0, 0)),
     m_gdiBrushColor(m_gdiColorBlack),
     m_gdiBrushBlack(m_gdiColorBlack),
+    m_gdiRandomBrushColor(m_gdiColorBlack),
     m_gdiGradientBrush(
         Point(pElement->m_rect.left, pElement->m_rect.top),
         Point(pElement->m_rect.right, pElement->m_rect.bottom),
@@ -140,13 +141,19 @@ CDrawingContext::CDrawingContext(std::shared_ptr<CElement> pElement)
 
     Color color1(255, 241, 247, 255);
     m_gdiGradientBrush.SetLinearColors(color1, m_gdiColorFill);
-
-
 }
 
 
 CDrawingContext::~CDrawingContext(void)
 {
+}
+
+SolidBrush& CDrawingContext::GetRandomBrushColor()
+{ 
+    Color gdiColorFill(255, 0, 0, 0);
+    gdiColorFill.SetValue(Color::MakeARGB(255, rand()%255, rand()% 255, rand()% 255));
+    m_gdiRandomBrushColor.SetColor(gdiColorFill);
+    return m_gdiRandomBrushColor;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -464,7 +471,7 @@ std::shared_ptr<CElement> CFactory::CreateElementOfType(ElementType type, ShapeT
         {
         case start_menu_element:
             pNewElement->m_text = L"";
-            pNewElement->m_colorFill = colorFillClass.ToCOLORREF();
+            pNewElement->m_colorFill = RGB(rand() % 255, rand() % 255, rand() % 255);
             pNewElement->m_colorLine = colorLineClass.ToCOLORREF();
             break;
         }
@@ -2310,11 +2317,18 @@ void CStartMenuElement::Draw(CDrawingContext& ctxt)
     CRect rect = m_rect;
     Graphics* graphics = ctxt.GetGraphics();
     Pen& colorPen = ctxt.GetPenColor();
+    //SolidBrush& solidBrush = ctxt.GetRandomBrushColor();
     SolidBrush& solidBrush = ctxt.GetBrushColor();
     SolidBrush& solidBrushText = ctxt.GetBrushBlack();
 
     if (m_shapeType == ShapeType::start_menu_element)
     {
+        Color gdiColorFill(255, 0, 0, 0);
+        SolidBrush gdiBrushColor(gdiColorFill);
+        gdiColorFill.SetValue(Color::MakeARGB(255, rand() % 255, rand() % 255, rand() % 255));
+        gdiBrushColor.SetColor(gdiColorFill);
+
+        //graphics->FillRectangle(&gdiBrushColor, rect.left, rect.top, rect.Width(), rect.Height());
         graphics->FillRectangle(&solidBrush, rect.left, rect.top, rect.Width(), rect.Height());
         graphics->DrawRectangle(&colorPen, rect.left, rect.top, rect.Width(), rect.Height());
 
@@ -4163,20 +4177,31 @@ void CalcAutoPointRect2(int count, std::shared_ptr<CElement> pNewElement)
 
 void CalcAutoPointRect(int count, std::shared_ptr<CElement> pNewElement)
 {
+    static bool flag = true;
     int c = 0;
-    for (int x = 0; x < 20; x++)
+    for (int y = 0; y < 20; y++)
     {
-        for (int y = 0; y < 20; y++)
+        for (int x = 0; x < 20; x++)
         {
             if (count % 400 == c)
             {
                 pNewElement->m_point.x = 200 * x;
-                pNewElement->m_point.y = 50 * y;
+                pNewElement->m_point.y = 200 * y;
+
+                flag = (flag == true ? false : true);
+                if (flag == true)
+                {
+                    pNewElement->m_point.y += 20;
+                }
+                else
+                {
+                    pNewElement->m_point.y += 10;
+                }
 
                 pNewElement->m_rect.left = pNewElement->m_point.x;
                 pNewElement->m_rect.top = pNewElement->m_point.y;
-                pNewElement->m_rect.right = pNewElement->m_point.x + 100 + 50;
-                pNewElement->m_rect.bottom = pNewElement->m_point.y + 30;
+                pNewElement->m_rect.right = pNewElement->m_point.x + 150 + 10;
+                pNewElement->m_rect.bottom = pNewElement->m_point.y + 150 + 10;
                 return;
             }
 
@@ -4191,6 +4216,9 @@ void CElementManager::FindAConnectionFor(std::shared_ptr<CElement> pElement, CPo
 
 void CElementManager::LoadStartMenu(CStartMenuViewEx* pView)
 {
+    // Rmove all graphic objects
+    m_objects.RemoveAll();
+
     CWnd* pWnd = AfxGetMainWnd();
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
     int count = 1;
@@ -4228,7 +4256,7 @@ void CElementManager::LoadStartMenu(CStartMenuViewEx* pView)
         pNewElement->m_pManager = this;
         pNewElement->m_pView = pView;
 
-        // Add an object
+        // Add a graphic object
         m_objects.AddTail(pNewElement);
         pView->LogDebug(_T("object created ->") + pNewElement->ToString());
 

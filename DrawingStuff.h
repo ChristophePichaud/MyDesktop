@@ -315,6 +315,7 @@ public:
     Pen& GetPenColor() { return m_gdiPenColor; }
     SolidBrush& GetBrushColor() { return m_gdiBrushColor; }
     SolidBrush& GetBrushBlack() { return m_gdiBrushBlack; }
+    SolidBrush& GetRandomBrushColor();
     LinearGradientBrush& GetGradientBrushColor() { return m_gdiGradientBrush; }
     CPoint GetTopLeft() { return m_pointTopLeft; }
 CPoint GetBottomRight() { return m_pointBottomRight; }
@@ -332,6 +333,7 @@ public:
     Pen m_gdiPenColor;
     SolidBrush m_gdiBrushColor;
     SolidBrush m_gdiBrushBlack;
+    SolidBrush m_gdiRandomBrushColor;
     LinearGradientBrush m_gdiGradientBrush;
 
     // MFC Drawing objects
