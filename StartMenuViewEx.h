@@ -174,6 +174,9 @@ public:
     afx_msg void OnUpdateFormatZoomIn(CCmdUI* pCmdUI);
     afx_msg void OnFormatZoomOut();
     afx_msg void OnUpdateFormatZoomOut(CCmdUI* pCmdUI);
+    afx_msg void OnSearchGo();
+    afx_msg void OnUpdateSearchGo(CCmdUI* pCmdUI);
+    afx_msg void OnSearchReset();
 };
 
 #ifndef _DEBUG  // debug version in Modeler1View.cpp

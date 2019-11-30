@@ -83,15 +83,18 @@
 #define ID_GET_APPZ                     32771
 #define ID_VIEW_STARTMENU               32773
 #define ID_APPZ_DETAILS                 32774
-#define ID_BUTTON2                      32775
 #define ID_VIEW_STARTMENU2              32775
+#define ID_EDIT_NAME                    32776
+#define ID_SEARCH_GO                    32777
+#define ID_BUTTON2                      32778
+#define ID_SEARCH_RESET                 32778
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        313
-#define _APS_NEXT_COMMAND_VALUE         32776
+#define _APS_NEXT_COMMAND_VALUE         32779
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           314
 #endif

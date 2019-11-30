@@ -1,5 +1,8 @@
 #pragma once
 
+string ToUpper(string strToConvert);
+wstring ToUpper(wstring strToConvert);
+
 class CStartMenuAttributes
 {
 public:
@@ -315,6 +318,7 @@ public:
     Pen& GetPenColor() { return m_gdiPenColor; }
     SolidBrush& GetBrushColor() { return m_gdiBrushColor; }
     SolidBrush& GetBrushBlack() { return m_gdiBrushBlack; }
+    SolidBrush& GetBrushWhite() { return m_gdiBrushWhite; }
     SolidBrush& GetRandomBrushColor();
     LinearGradientBrush& GetGradientBrushColor() { return m_gdiGradientBrush; }
     CPoint GetTopLeft() { return m_pointTopLeft; }
@@ -333,6 +337,7 @@ public:
     Pen m_gdiPenColor;
     SolidBrush m_gdiBrushColor;
     SolidBrush m_gdiBrushBlack;
+    SolidBrush m_gdiBrushWhite;
     SolidBrush m_gdiRandomBrushColor;
     LinearGradientBrush m_gdiGradientBrush;
 
@@ -520,9 +525,11 @@ public:
     void SelectNone();
     void DrawSelectionRect(CStartMenuViewEx* pView);
 
-    // Load Module Operations
+    // Start Menu Operations
 public:
     void LoadStartMenu(CStartMenuViewEx* pView);
+    void OnSearchGo(CStartMenuViewEx* pView);
+    void OnSearchReset(CStartMenuViewEx* pView);
 
     // Overridables
 public:

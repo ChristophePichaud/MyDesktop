@@ -4,6 +4,20 @@
 #include "MyDesktopDoc.h"
 #include "StartMenuViewEx.h"
 
+string ToUpper(string strToConvert)
+{
+    std::transform(strToConvert.begin(), strToConvert.end(), strToConvert.begin(), ::toupper);
+
+    return strToConvert;
+}
+
+wstring ToUpper(wstring strToConvert)
+{
+    std::transform(strToConvert.begin(), strToConvert.end(), strToConvert.begin(), ::toupper);
+
+    return strToConvert;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CGuid Class
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +135,7 @@ CDrawingContext::CDrawingContext(std::shared_ptr<CElement> pElement)
     m_gdiPenColor(Color(255, 0, 0, 0)),
     m_gdiBrushColor(m_gdiColorBlack),
     m_gdiBrushBlack(m_gdiColorBlack),
+    m_gdiBrushWhite(m_gdiColorWhite),
     m_gdiRandomBrushColor(m_gdiColorBlack),
     m_gdiGradientBrush(
         Point(pElement->m_rect.left, pElement->m_rect.top),
@@ -138,6 +153,8 @@ CDrawingContext::CDrawingContext(std::shared_ptr<CElement> pElement)
     m_pointTopLeft = pElement->m_rect.TopLeft();
     m_pointBottomRight = pElement->m_rect.BottomRight();
     m_gdiBrushColor.SetColor(m_gdiColorFill);
+    m_gdiBrushBlack.SetColor(m_gdiColorBlack);
+    m_gdiBrushWhite.SetColor(m_gdiColorWhite);
 
     Color color1(255, 241, 247, 255);
     m_gdiGradientBrush.SetLinearColors(color1, m_gdiColorFill);
@@ -2319,7 +2336,7 @@ void CStartMenuElement::Draw(CDrawingContext& ctxt)
     Pen& colorPen = ctxt.GetPenColor();
     //SolidBrush& solidBrush = ctxt.GetRandomBrushColor();
     SolidBrush& solidBrush = ctxt.GetBrushColor();
-    SolidBrush& solidBrushText = ctxt.GetBrushBlack();
+    SolidBrush& solidBrushText = ctxt.GetBrushWhite(); //ctxt.GetBrushBlack();
 
     if (m_shapeType == ShapeType::start_menu_element)
     {
@@ -4193,8 +4210,8 @@ void CalcAutoPointRect(int count, std::shared_ptr<CElement> pNewElement)
         {
             if (count % 400 == c)
             {
-                pNewElement->m_point.x = 200 * x;
-                pNewElement->m_point.y = 200 * y;
+                pNewElement->m_point.x = 75 * x;
+                pNewElement->m_point.y = 75 * y;
 
                 flag = (flag == true ? false : true);
                 if (flag == true)
@@ -4208,8 +4225,8 @@ void CalcAutoPointRect(int count, std::shared_ptr<CElement> pNewElement)
 
                 pNewElement->m_rect.left = pNewElement->m_point.x;
                 pNewElement->m_rect.top = pNewElement->m_point.y;
-                pNewElement->m_rect.right = pNewElement->m_point.x + 150 + 10;
-                pNewElement->m_rect.bottom = pNewElement->m_point.y + 150 + 10;
+                pNewElement->m_rect.right = pNewElement->m_point.x + 80 + 10;
+                pNewElement->m_rect.bottom = pNewElement->m_point.y + 80 + 10;
                 return;
             }
 
@@ -4229,6 +4246,7 @@ void CElementManager::LoadStartMenu(CStartMenuViewEx* pView)
 
     CWnd* pWnd = AfxGetMainWnd();
     CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+
     int count = 1;
     map<wstring, int> mapAppz;
     for (shared_ptr<ApplicationLink> link : pMainFrame->GetManager()->m_Links)
@@ -4273,3 +4291,99 @@ void CElementManager::LoadStartMenu(CStartMenuViewEx* pView)
 
     pView->Invalidate();
 }
+
+void CElementManager::OnSearchGo(CStartMenuViewEx* pView)
+{
+    USES_CONVERSION;
+
+    // Rmove all graphic objects
+    m_objects.RemoveAll();
+
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+
+    CMFCRibbonBar* pRibbon = pMainFrame->GetRibbonBar();
+    CMFCRibbonEdit* pEdit = DYNAMIC_DOWNCAST(CMFCRibbonEdit, pRibbon->FindByID(ID_EDIT_NAME));
+    if (pEdit == NULL)
+    {
+        return;
+    }
+
+    CString strSearch = pEdit->GetEditText().MakeUpper();
+
+    // TODO: Add your command handler code here
+    if (strSearch.IsEmpty())
+    {
+        LoadStartMenu(pView);
+        return;
+    }
+
+    int count = 1;
+    map<wstring, int> mapAppz;
+    for (shared_ptr<ApplicationLink> link : pMainFrame->GetManager()->m_Links)
+    {
+        if (link->_hIcon == 0)
+            continue;
+
+        //HICON hIcon = link->_hIcon;
+        mapAppz[link->_name] = count;
+        ++count;
+    }
+
+    count = 0;
+    for (shared_ptr<ApplicationLink> link : pMainFrame->GetManager()->m_Links)
+    {
+        //lvItem.pszText = (LPTSTR)link->_name.c_str();
+
+        std::wstring slink = ToUpper(link->_name);
+        if (slink.find(_T(".LNK")) == wstring::npos)
+        {
+            continue;
+        }
+
+        if (slink.find(strSearch) == wstring::npos)
+        {
+            continue;
+        }
+
+        std::shared_ptr<CElement> pNewElement = CFactory::CreateElementOfType(ElementType::type_start_menu,
+            ShapeType::start_menu_element);
+        CElement* pElement = pNewElement.get();
+        CStartMenuElement* pSMElement = (CStartMenuElement*)pElement;
+
+        pSMElement->m_attr.m_Name = link->_name;
+        pNewElement->m_text = (CStringW)pSMElement->m_attr.m_Name.c_str();
+
+        CalcAutoPointRect(count, pNewElement);
+        pNewElement->m_pManager = this;
+        pNewElement->m_pView = pView;
+
+        // Add a graphic object
+        m_objects.AddTail(pNewElement);
+        pView->LogDebug(_T("object created ->") + pNewElement->ToString());
+
+        ++count;
+    }
+
+    pView->Invalidate();
+}
+
+void CElementManager::OnSearchReset(CStartMenuViewEx* pView)
+{
+    USES_CONVERSION;
+
+    CWnd* pWnd = AfxGetMainWnd();
+    CMainFrame* pMainFrame = (CMainFrame*)pWnd;
+
+    CMFCRibbonBar* pRibbon = pMainFrame->GetRibbonBar();
+    CMFCRibbonEdit* pEdit = DYNAMIC_DOWNCAST(CMFCRibbonEdit, pRibbon->FindByID(ID_EDIT_NAME));
+    if (pEdit == NULL)
+    {
+        return;
+    }
+
+    pEdit->SetEditText(_T(""));
+    //pEdit->Redraw();
+    LoadStartMenu(pView);
+}
+

@@ -83,6 +83,9 @@ BEGIN_MESSAGE_MAP(CStartMenuViewEx, CScrollView)
     ON_UPDATE_COMMAND_UI(ID_FORMAT_ZOOM_IN, OnUpdateFormatZoomIn)
     ON_COMMAND(ID_FORMAT_ZOOM_OUT, OnFormatZoomOut)
     ON_UPDATE_COMMAND_UI(ID_FORMAT_ZOOM_OUT, OnUpdateFormatZoomOut)
+    ON_COMMAND(ID_SEARCH_GO, &CStartMenuViewEx::OnSearchGo)
+    ON_UPDATE_COMMAND_UI(ID_SEARCH_GO, &CStartMenuViewEx::OnUpdateSearchGo)
+    ON_COMMAND(ID_SEARCH_RESET, &CStartMenuViewEx::OnSearchReset)
 END_MESSAGE_MAP()
 
 // CStartMenuViewEx construction/destruction
@@ -711,4 +714,25 @@ void CStartMenuViewEx::OnModelingTextBoxes(UINT nID)
         GetManager()->m_shapeType = ShapeType::text_justify;
         break;
     }
+}
+
+
+void CStartMenuViewEx::OnSearchGo()
+{
+    // TODO: Add your command handler code here
+    GetManager()->OnSearchGo(this);
+}
+
+
+void CStartMenuViewEx::OnUpdateSearchGo(CCmdUI* pCmdUI)
+{
+    // TODO: Add your command update UI handler code here
+    pCmdUI->Enable(TRUE);
+}
+
+
+void CStartMenuViewEx::OnSearchReset()
+{
+    // TODO: Add your command handler code here
+    GetManager()->OnSearchReset(this);
 }

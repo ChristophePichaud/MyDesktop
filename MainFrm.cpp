@@ -47,6 +47,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
     ON_COMMAND(ID_VIEW_STARTMENU, &CMainFrame::OnViewStartmenu)
     ON_COMMAND(ID_APPZ_DETAILS, &CMainFrame::OnAppzDetails)
     ON_COMMAND(ID_VIEW_STARTMENU2, &CMainFrame::OnViewStartmenu2)
+//    ON_COMMAND(ID_SEARCH_GO, &CMainFrame::OnSearchGo)
+    ON_UPDATE_COMMAND_UI(ID_EDIT_NAME, &CMainFrame::OnUpdateEditName)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -572,4 +574,10 @@ int CMainFrame::GetWidthFromLineWidth(int nButtonID)
 void CMainFrame::UpdateRibbonUI(CStartMenuViewEx* pView)
 {
 
+}
+
+void CMainFrame::OnUpdateEditName(CCmdUI* pCmdUI)
+{
+    // TODO: Add your command update UI handler code here
+    pCmdUI->Enable(TRUE);
 }
