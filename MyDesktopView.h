@@ -55,6 +55,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
     afx_msg void OnGetIcon();
+    afx_msg void OnBnClickedStartApplication();
 };
 
 #ifndef _DEBUG  // debug version in MyDesktopView.cpp

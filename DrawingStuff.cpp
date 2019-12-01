@@ -2334,9 +2334,8 @@ void CStartMenuElement::Draw(CDrawingContext& ctxt)
     CRect rect = m_rect;
     Graphics* graphics = ctxt.GetGraphics();
     Pen& colorPen = ctxt.GetPenColor();
-    //SolidBrush& solidBrush = ctxt.GetRandomBrushColor();
     SolidBrush& solidBrush = ctxt.GetBrushColor();
-    SolidBrush& solidBrushText = ctxt.GetBrushWhite(); //ctxt.GetBrushBlack();
+    SolidBrush& solidBrushText = ctxt.GetBrushWhite();
 
     if (m_shapeType == ShapeType::start_menu_element)
     {
@@ -2348,10 +2347,6 @@ void CStartMenuElement::Draw(CDrawingContext& ctxt)
         //graphics->FillRectangle(&gdiBrushColor, rect.left, rect.top, rect.Width(), rect.Height());
         graphics->FillRectangle(&solidBrush, rect.left, rect.top, rect.Width(), rect.Height());
         graphics->DrawRectangle(&colorPen, rect.left, rect.top, rect.Width(), rect.Height());
-
-        CPoint& p1 = ctxt.GetTopLeft();
-        CPoint& p2 = ctxt.GetBottomRight();
-        CPoint pointText(rect.left + 10, rect.top + 10);
 
         // Font object
         FontFamily fontFamily(L"Calibri");
@@ -2365,8 +2360,8 @@ void CStartMenuElement::Draw(CDrawingContext& ctxt)
         m_text = m_attr.m_Name;
 
         RectF rectF(rect.left, rect.top, rect.Width(), rect.Height());
-
         graphics->DrawString(CStringW(this->m_text.c_str()), -1, &font, rectF, &stringFormat, &solidBrushText);
+        //CPoint pointText(rect.left + 10, rect.top + 10);
         //graphics->DrawString(CStringW(this->m_text.c_str()), -1, &font, PointF(pointText.x, pointText.y), &solidBrushText);
     }
 }
@@ -4383,7 +4378,6 @@ void CElementManager::OnSearchReset(CStartMenuViewEx* pView)
     }
 
     pEdit->SetEditText(_T(""));
-    //pEdit->Redraw();
     LoadStartMenu(pView);
 }
 

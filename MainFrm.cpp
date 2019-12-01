@@ -49,6 +49,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
     ON_COMMAND(ID_VIEW_STARTMENU2, &CMainFrame::OnViewStartmenu2)
 //    ON_COMMAND(ID_SEARCH_GO, &CMainFrame::OnSearchGo)
     ON_UPDATE_COMMAND_UI(ID_EDIT_NAME, &CMainFrame::OnUpdateEditName)
+    ON_COMMAND(ID_VIEW_APPLICATIONS, &CMainFrame::OnViewApplications)
+    ON_UPDATE_COMMAND_UI(ID_VIEW_APPLICATIONS, &CMainFrame::OnUpdateViewApplications)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -580,4 +582,19 @@ void CMainFrame::OnUpdateEditName(CCmdUI* pCmdUI)
 {
     // TODO: Add your command update UI handler code here
     pCmdUI->Enable(TRUE);
+}
+
+
+void CMainFrame::OnViewApplications()
+{
+    // TODO: Add your command handler code here
+    m_wndApplicationView.ShowWindow(m_wndApplicationView.IsVisible() ? SW_HIDE : SW_SHOW);
+    RecalcLayout(FALSE);
+}
+
+
+void CMainFrame::OnUpdateViewApplications(CCmdUI* pCmdUI)
+{
+    // TODO: Add your command update UI handler code here
+    pCmdUI->SetCheck(m_wndApplicationView.IsVisible());
 }

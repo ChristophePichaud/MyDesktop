@@ -36,6 +36,7 @@ public:
     HICON m_hIcon;
 
     afx_msg void OnPaint();
+    CString m_strArgs;
 };
 
 

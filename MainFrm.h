@@ -122,6 +122,8 @@ public:
     afx_msg void OnViewStartmenu2();
 //    afx_msg void OnSearchGo();
     afx_msg void OnUpdateEditName(CCmdUI* pCmdUI);
+    afx_msg void OnViewApplications();
+    afx_msg void OnUpdateViewApplications(CCmdUI* pCmdUI);
 };
 
 

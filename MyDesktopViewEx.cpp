@@ -12,6 +12,7 @@ IMPLEMENT_DYNCREATE(CMyDesktopViewEx, CFormView)
 
 CMyDesktopViewEx::CMyDesktopViewEx()
 	: CFormView(IDD_CMyDesktopViewEx)
+    , m_strArgs(_T(""))
 {
     m_strApplicationName = _T("");
     m_strApplicationPathFileName = _T("");
@@ -24,9 +25,10 @@ CMyDesktopViewEx::~CMyDesktopViewEx()
 
 void CMyDesktopViewEx::DoDataExchange(CDataExchange* pDX)
 {
-	CFormView::DoDataExchange(pDX);
+    CFormView::DoDataExchange(pDX);
     DDX_Text(pDX, IDC_EDIT_APPLICATION, m_strApplicationName);
     DDX_Text(pDX, IDC_EDIT_PATH, m_strApplicationPathFileName);
+    DDX_Text(pDX, IDC_EDIT_ARGS, m_strArgs);
 }
 
 BEGIN_MESSAGE_MAP(CMyDesktopViewEx, CFormView)

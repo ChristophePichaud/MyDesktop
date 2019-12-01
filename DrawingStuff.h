@@ -1,5 +1,7 @@
 #pragma once
 
+#define MAX_ARGS 4096
+
 string ToUpper(string strToConvert);
 wstring ToUpper(wstring strToConvert);
 

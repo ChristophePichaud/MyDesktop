@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CMyDesktopView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMyDesktopView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+    ON_BN_CLICKED(IDC_START_APPLICATION, &CMyDesktopView::OnBnClickedStartApplication)
 END_MESSAGE_MAP()
 
 // CMyDesktopView construction/destruction
@@ -136,3 +137,9 @@ CMyDesktopDoc* CMyDesktopView::GetDocument() const // non-debug version is inlin
 
 
 // CMyDesktopView message handlers
+
+
+void CMyDesktopView::OnBnClickedStartApplication()
+{
+    // TODO: Add your control notification handler code here
+}

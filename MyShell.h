@@ -10,6 +10,7 @@ public:
     wstring _name;
     wstring _linkFilePathName;
     wstring _appFilePathName;
+    wstring _appArgs;
     int _iconIndex;
     HICON _hIcon;
 };

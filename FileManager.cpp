@@ -11,7 +11,11 @@ CFileManager::~CFileManager()
 {
 }
 
-CString CFileManager::SearchDrive(const CString& strFile, const CString& strFilePath, const bool& bRecursive, const bool& bStopWhenFound, HTREEITEM parent)
+CString CFileManager::SearchDrive(const CString& strFile, 
+                                const CString& strFilePath, 
+                                const bool& bRecursive, 
+                                const bool& bStopWhenFound, 
+    HTREEITEM parent)
 {
     USES_CONVERSION;
 
@@ -47,28 +51,29 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
             }
             else
             {
-                //if (strTheNameOfTheFile == strFile)
+                strFoundFilePath = strPathToSearch + strTheNameOfTheFile;
+
+                CString strFile = strFoundFilePath.MakeUpper();
+                if (strFile.Find(_T(".LNK")) == -1)
                 {
-                    strFoundFilePath = strPathToSearch + strTheNameOfTheFile; //strFile;
-
-                    /// TODO
-                    // ADD TO COLLECTION TYPE
-                    std::shared_ptr<ApplicationLink> al = std::make_shared<ApplicationLink>();
-                    al->_name = T2W((LPTSTR)(LPCTSTR)strTheNameOfTheFile); //strFile;
-                    al->_appFilePathName = _T("");
-                    al->_linkFilePathName = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
-                    al->_hIcon = 0;
-                    al->_iconIndex = 0;
-                    ProcessLink(al);
-                    ExtractIcon(al);
-                    pMainFrame->GetManager()->m_Links.push_back(al);
-                    //this->UpdateSolution(cf);
-                    HTREEITEM hItem = pMainFrame->m_wndApplicationView.m_wndFileView.InsertItem(strTheNameOfTheFile /*cf->_name.c_str()*/, 2, 2, parent);
-                    pMainFrame->m_wndApplicationView.m_wndFileView.SetItemData(hItem, (DWORD_PTR)(al.get()));
-
-                    if (bStopWhenFound)
-                        break;
+                    continue;
                 }
+
+                // ADD TO COLLECTION TYPE
+                std::shared_ptr<ApplicationLink> al = std::make_shared<ApplicationLink>();
+                al->_name = T2W((LPTSTR)(LPCTSTR)strTheNameOfTheFile);
+                al->_appFilePathName = _T("");
+                al->_linkFilePathName = T2W((LPTSTR)(LPCTSTR)strFoundFilePath);
+                al->_hIcon = 0;
+                al->_iconIndex = 0;
+                ProcessLink(al);
+                ExtractIcon(al);
+                pMainFrame->GetManager()->m_Links.push_back(al);
+                HTREEITEM hItem = pMainFrame->m_wndApplicationView.m_wndFileView.InsertItem(strTheNameOfTheFile , 2, 2, parent);
+                pMainFrame->m_wndApplicationView.m_wndFileView.SetItemData(hItem, (DWORD_PTR)(al.get()));
+
+                if (bStopWhenFound)
+                    break;
             }
         } while (FindNextFile(hFile, &file));
 
@@ -78,10 +83,11 @@ CString CFileManager::SearchDrive(const CString& strFile, const CString& strFile
     return strFoundFilePath;
 }
 
-HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize, int & iconIndex)
+HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize, LPWSTR lpszArgs, int & iconIndex)
 {
     HRESULT hres;
     WCHAR szGotPath[MAX_PATH];
+    WCHAR szGotArgs[MAX_ARGS];
     WCHAR szDescription[MAX_PATH];
     WIN32_FIND_DATA wfd;
 
@@ -119,6 +125,16 @@ HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath,
         wcout << "GetPath failed" << endl;
         return hres;
     }
+    _tcscpy_s(lpszPath, iPathBufferSize, szGotPath);
+
+    // Get the arguments
+    hres = shellLink->GetArguments(szGotArgs, MAX_PATH);
+    if (FAILED(hres))
+    {
+        wcout << "GetArguments failed" << endl;
+        return hres;
+    }
+    _tcscpy_s(lpszArgs, MAX_ARGS, szGotArgs);
 
     // Get the description of the target. 
     hres = shellLink->GetDescription(szDescription, MAX_PATH);
@@ -127,8 +143,6 @@ HRESULT CFileManager::ResolveIt(HWND hwnd, LPWSTR lpszLinkFile, LPWSTR lpszPath,
         wcout << "GetDescription failed" << endl;
         return hres;
     }
-
-    _tcscpy_s(lpszPath, iPathBufferSize, szGotPath);
 
     WCHAR szIconPath[255];
     int iIconPathBufferSize = 255;
@@ -144,12 +158,13 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     //HRESULT CFileManager::ResolveIt(HWND hwnd, LPCSTR lpszLinkFile, LPWSTR lpszPath, int iPathBufferSize)
 
     WCHAR lpszPath[255];
+    WCHAR lpszArgs[MAX_ARGS];
     int iPathBufferSize = 255;
     const wchar_t* fn = pLink->_linkFilePathName.c_str();
     int iconIndex = 0;
     pLink->_iconIndex = iconIndex;
 
-    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize, iconIndex);
+    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize, lpszArgs, iconIndex);
     if (FAILED(hr))
     {
         wcout << "ResolveIt failed" << endl;
@@ -157,6 +172,7 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     }
 
     pLink->_appFilePathName = lpszPath;
+    pLink->_appArgs = lpszArgs;
     pLink->_iconIndex = iconIndex;
     //AfxMessageBox(lpszPath);
 
@@ -169,6 +185,7 @@ void CFileManager::ProcessLink(ApplicationLink* pLink)
     CMyDesktopViewEx* pMyView = (CMyDesktopViewEx*)pView;
     pMyView->m_strApplicationName = pLink->_name.c_str();
     pMyView->m_strApplicationPathFileName = pLink->_appFilePathName.c_str();
+    pMyView->m_strArgs = pLink->_appArgs.c_str();
     ExtractIcon(pLink);
     pMyView->m_hIcon = pLink->_hIcon;
     pMyView->UpdateData(FALSE);
@@ -181,11 +198,12 @@ void CFileManager::ProcessLink(shared_ptr<ApplicationLink> link)
 
     WCHAR lpszPath[255];
     int iPathBufferSize = 255;
+    WCHAR lpszArgs[MAX_ARGS];
     const wchar_t* fn = link->_linkFilePathName.c_str();
     int iconIndex = 0;
     link->_iconIndex = iconIndex;
 
-    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize, iconIndex);
+    HRESULT hr = CFileManager::ResolveIt(NULL, (LPWSTR)fn, lpszPath, iPathBufferSize, lpszArgs, iconIndex);
     if (FAILED(hr))
     {
         wcout << "ResolveIt failed" << endl;
@@ -193,6 +211,7 @@ void CFileManager::ProcessLink(shared_ptr<ApplicationLink> link)
     }
 
     link->_appFilePathName = lpszPath;
+    link->_appArgs = lpszArgs;
     link->_iconIndex = iconIndex;
 }
 
