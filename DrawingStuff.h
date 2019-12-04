@@ -8,7 +8,10 @@ wstring ToUpper(wstring strToConvert);
 class CStartMenuAttributes
 {
 public:
-    std::wstring m_Name;
+    wstring _name;
+    wstring _linkFilePathName;
+    wstring _appFilePathName;
+    wstring _appArgs;
 };
 
 
@@ -478,6 +481,7 @@ public:
     void OnEditCut(CStartMenuViewEx* pView);
     void OnEditCopy(CStartMenuViewEx* pView);
     void OnEditPaste(CStartMenuViewEx* pView);
+    void OnEditRun(CStartMenuViewEx* pView);
 
     // Managing Object Positions
 public:

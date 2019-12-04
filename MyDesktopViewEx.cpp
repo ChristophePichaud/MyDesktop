@@ -33,6 +33,7 @@ void CMyDesktopViewEx::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CMyDesktopViewEx, CFormView)
     ON_WM_PAINT()
+    ON_BN_CLICKED(IDC_START_APPLICATION, &CMyDesktopViewEx::OnBnClickedStartApplication)
 END_MESSAGE_MAP()
 
 
@@ -80,5 +81,15 @@ void CMyDesktopViewEx::OnPaint()
                        // TODO: Add your message handler code here
                        // Do not call CFormView::OnPaint() for painting messages
 
-    dc.DrawIcon(100, 100, m_hIcon);
+    dc.DrawIcon(100, 200, m_hIcon);
+}
+
+
+void CMyDesktopViewEx::OnBnClickedStartApplication()
+{
+    // TODO: Add your control notification handler code here
+    UpdateData(TRUE);
+    //m_strApplicationPathFileName & m_strArgs;
+    //::ShellExecuteW(NULL, NULL, m_strApplicationPathFileName, m_strArgs, NULL, SW_SHOW);
+    CFileManager::Run((LPCTSTR)m_strApplicationPathFileName, (LPCTSTR)m_strArgs);
 }

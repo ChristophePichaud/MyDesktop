@@ -37,6 +37,7 @@ public:
 
     afx_msg void OnPaint();
     CString m_strArgs;
+    afx_msg void OnBnClickedStartApplication();
 };
 
 

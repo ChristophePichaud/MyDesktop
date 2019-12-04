@@ -2357,7 +2357,7 @@ void CStartMenuElement::Draw(CDrawingContext& ctxt)
         stringFormat.SetAlignment(StringAlignment::StringAlignmentCenter);
         stringFormat.SetLineAlignment(StringAlignment::StringAlignmentCenter);
 
-        m_text = m_attr.m_Name;
+        m_text = m_attr._name;
 
         RectF rectF(rect.left, rect.top, rect.Width(), rect.Height());
         graphics->DrawString(CStringW(this->m_text.c_str()), -1, &font, rectF, &stringFormat, &solidBrushText);
@@ -3035,6 +3035,22 @@ void CElementManager::OnEditPaste(CStartMenuViewEx* pView)
     m_selectMode = SelectMode::move;
 
     m_clipboard.RemoveAll();
+
+    Invalidate(pView);
+}
+
+void CElementManager::OnEditRun(CStartMenuViewEx* pView)
+{
+    for (vector<std::shared_ptr<CElement>>::const_iterator itSel = m_selection.m_objects.begin(); itSel != m_selection.m_objects.end(); itSel++)
+    {
+        std::shared_ptr<CElement> pElement = *itSel;
+        if (pElement->m_shapeType == ShapeType::start_menu_element)
+        {
+            CElement * ptrE = pElement.get();
+            CStartMenuElement* ptr = (CStartMenuElement*)ptrE;
+            CFileManager::Run(ptr->m_attr._appFilePathName.c_str(), ptr->m_attr._appArgs.c_str());
+        }
+    }
 
     Invalidate(pView);
 }
@@ -4270,8 +4286,12 @@ void CElementManager::LoadStartMenu(CStartMenuViewEx* pView)
         CElement* pElement = pNewElement.get();
         CStartMenuElement* pSMElement = (CStartMenuElement*)pElement;
 
-        pSMElement->m_attr.m_Name = link->_name;
-        pNewElement->m_text = (CStringW)pSMElement->m_attr.m_Name.c_str();
+        pSMElement->m_attr._name = link->_name;
+        pSMElement->m_attr._appArgs = link->_appArgs;
+        pSMElement->m_attr._appFilePathName = link->_appFilePathName;
+        pSMElement->m_attr._linkFilePathName = link->_linkFilePathName;
+
+        pNewElement->m_text = (CStringW)pSMElement->m_attr._name.c_str();
 
         CalcAutoPointRect(count, pNewElement);
         pNewElement->m_pManager = this;
@@ -4346,8 +4366,12 @@ void CElementManager::OnSearchGo(CStartMenuViewEx* pView)
         CElement* pElement = pNewElement.get();
         CStartMenuElement* pSMElement = (CStartMenuElement*)pElement;
 
-        pSMElement->m_attr.m_Name = link->_name;
-        pNewElement->m_text = (CStringW)pSMElement->m_attr.m_Name.c_str();
+        pSMElement->m_attr._name = link->_name;
+        pSMElement->m_attr._appArgs = link->_appArgs;
+        pSMElement->m_attr._appFilePathName = link->_appFilePathName;
+        pSMElement->m_attr._linkFilePathName = link->_linkFilePathName;
+        
+        pNewElement->m_text = (CStringW)pSMElement->m_attr._name.c_str();
 
         CalcAutoPointRect(count, pNewElement);
         pNewElement->m_pManager = this;

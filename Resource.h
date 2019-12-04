@@ -80,7 +80,6 @@
 #define IDC_EDIT_PATH                   1001
 #define IDC_APPLICATIONS                1001
 #define IDC_START_APPLICATION           1002
-#define IDC_EDIT_PATH2                  1003
 #define IDC_EDIT_ARGS                   1003
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_GET_APPZ                     32771
@@ -91,13 +90,14 @@
 #define ID_SEARCH_GO                    32777
 #define ID_SEARCH_RESET                 32778
 #define ID_VIEW_APPLICATIONS            32779
+#define ID_EDIT_RUN                     32780
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        313
-#define _APS_NEXT_COMMAND_VALUE         32780
+#define _APS_NEXT_COMMAND_VALUE         32781
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           314
 #endif

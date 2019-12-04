@@ -259,3 +259,8 @@ void CFileManager::ClearTree()
     // Solution items
     m_Links.clear();
 }
+
+void CFileManager::Run(LPCWSTR lpszApp, LPCWSTR lpszArgs)
+{
+    ::ShellExecuteW(NULL, NULL, lpszApp, lpszArgs, NULL, SW_SHOW);
+}

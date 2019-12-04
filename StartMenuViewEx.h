@@ -126,6 +126,8 @@ public:
     afx_msg void OnUpdateEditCopy(CCmdUI* pCmdUI);
     afx_msg void OnEditPaste();
     afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
+    afx_msg void OnEditRun();
+    afx_msg void OnUpdateEditRun(CCmdUI* pCmdUI);
     afx_msg void OnModelingSelect();
     afx_msg void OnUpdateModelingSelect(CCmdUI* pCmdUI);
     afx_msg void OnModelingRectangle();

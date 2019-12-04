@@ -35,6 +35,8 @@ BEGIN_MESSAGE_MAP(CStartMenuViewEx, CScrollView)
     ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, &CStartMenuViewEx::OnUpdateEditCopy)
     ON_COMMAND(ID_EDIT_PASTE, &CStartMenuViewEx::OnEditPaste)
     ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, &CStartMenuViewEx::OnUpdateEditPaste)
+    ON_COMMAND(ID_EDIT_RUN, &CStartMenuViewEx::OnEditRun)
+    ON_UPDATE_COMMAND_UI(ID_EDIT_RUN, &CStartMenuViewEx::OnUpdateEditRun)
     ON_COMMAND(ID_DESIGN_SELECT, &CStartMenuViewEx::OnModelingSelect)
     ON_UPDATE_COMMAND_UI(ID_DESIGN_SELECT, &CStartMenuViewEx::OnUpdateModelingSelect)
     ON_COMMAND(ID_DESIGN_RECTANGLE, &CStartMenuViewEx::OnModelingRectangle)
@@ -390,6 +392,24 @@ void CStartMenuViewEx::OnUpdateEditPaste(CCmdUI* pCmdUI)
 
 }
 
+void CStartMenuViewEx::OnEditRun()
+{
+    // TODO: Add your command handler code here
+    GetManager()->OnEditRun(this);
+}
+
+void CStartMenuViewEx::OnUpdateEditRun(CCmdUI* pCmdUI)
+{
+    // TODO: Add your command update UI handler code here
+    if (GetManager()->HasSelection())
+    {
+        pCmdUI->Enable(TRUE);
+    }
+    else
+    {
+        pCmdUI->Enable(FALSE);
+    }
+}
 
 void CStartMenuViewEx::OnModelingSelect()
 {
